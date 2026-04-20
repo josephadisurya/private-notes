@@ -2,3 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+    font-family: "Satoshi";
+    font-feature-settings: "ss03";
+    font-style: normal;
+    src: url("../public/font/Satoshi-Variable.ttf");
+}
+
+  .special-t {
+    font-family: "Satoshi";
+    font-feature-settings: "ss03";
+  }

@@ -2,6 +2,8 @@ import { useState, useEffect, useRef } from "react";
 import Head from 'next/head';
 
 export default function Writer() {
+  const [isDownloadOpen, setIsDownloadOpen] = useState(false);
+  const downloadRef = useRef(null);
   const [title, setTitle] = useState("");
   const titleRef = useRef(null);
   const bodyRef = useRef(null);
@@ -59,6 +61,7 @@ export default function Writer() {
     localStorage.setItem("body", body);
   }, [title, body]);
 
+  // Download TXT
   const downloadTxtFile = () => {
     const fileTitle = title.trim() !== "" ? title : "Untitled"; // Use "Untitled" if title is empty
     const content = `${fileTitle}\n\n${body}\n\n${footer}`; // Include "Untitled" in content if title is empty
@@ -68,6 +71,20 @@ export default function Writer() {
     link.download = `${fileTitle}.txt`; // Use the dynamic file name
     link.click();
   };
+
+  // Download MD
+  const downloadMdFile = () => {
+    const fileTitle = title.trim() !== "" ? title : "Untitled";
+
+    const content = `# ${fileTitle}\n\n${body}\n\n---\n${footer}`;
+
+    const blob = new Blob([content], { type: "text/markdown" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = `${fileTitle}.md`;
+    link.click();
+  };
+
 
   // Function to calculate word count for title and body
   const countWords = (title, body) => {
@@ -114,6 +131,8 @@ export default function Writer() {
     }, 5000);
   };
 
+
+
   // Add event listener for mouse movement when the component mounts
   useEffect(() => {
     document.addEventListener("mousemove", handleMouseMove);
@@ -121,6 +140,20 @@ export default function Writer() {
     return () => {
       document.removeEventListener("mousemove", handleMouseMove);
       clearTimeout(timeoutId); // Clean up the timeout when the component unmounts
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (downloadRef.current && !downloadRef.current.contains(event.target)) {
+        setIsDownloadOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
@@ -203,16 +236,44 @@ export default function Writer() {
         <div className="fixed top-0 self-end z-20 m-5 flex items-center gap-x-3">
           {/* Download Button */}
           {iconsVisible && (
-            <div className="flex justify-center group">
+            <div ref={downloadRef} className="relative flex justify-center">
               <button
-                onClick={downloadTxtFile}
-                className="fill-neutral-400 hover:fill-black dark:hover:fill-white w-[30px] transform-all duration-500 "
+                onClick={() => setIsDownloadOpen((prev) => !prev)}
+                className="fill-neutral-400 hover:fill-black dark:hover:fill-white w-[30px] transform-all duration-500"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
                   <path d="M480-328.46 309.23-499.23l42.16-43.38L450-444v-336h60v336l98.61-98.61 42.16 43.38L480-328.46ZM252.31-180Q222-180 201-201q-21-21-21-51.31v-108.46h60v108.46q0 4.62 3.85 8.46 3.84 3.85 8.46 3.85h455.38q4.62 0 8.46-3.85 3.85-3.84 3.85-8.46v-108.46h60v108.46Q780-222 759-201q-21 21-51.31 21H252.31Z" />
                 </svg>
               </button>
-              <div className="text-xs absolute z-20 mt-10 dark:text-white text-black invisible lg:group-hover:visible">Download</div>
+
+              {isDownloadOpen && (
+                <div className="absolute top-10 right-0 bg-white dark:bg-neutral-800 shadow-[0_0_10px_rgba(0,0,0,0.15)] rounded-md text-xs flex flex-col overflow-hidden z-30 p-2 gap-2 w-[250px]">
+                  <button
+                    onClick={() => {
+                      downloadTxtFile();
+                      setIsDownloadOpen(false);
+                    }}
+                    className="px-4 py-2 hover:bg-neutral-100 dark:hover:bg-neutral-700 text-left flex text-sm rounded-md transform-all duration-300"
+                  >
+                    <div className="flex flex-row items-center justify-between w-full">
+                      <div className="flex w-fit">Text</div>
+                      <div className="flex w-fit text-neutral-400">.txt</div>
+                    </div>
+                  </button>
+                  <button
+                    onClick={() => {
+                      downloadMdFile();
+                      setIsDownloadOpen(false);
+                    }}
+                    className="px-4 py-2 hover:bg-neutral-100 dark:hover:bg-neutral-700 text-left flex text-sm rounded-md transform-all duration-300"
+                  >
+                     <div className="flex flex-row items-center justify-between w-full">
+                      <div className="flex w-fit">Markdown</div>
+                      <div className="flex w-fit text-neutral-400">.md</div>
+                    </div>
+                  </button>
+                </div>
+              )}
             </div>
           )}
 
