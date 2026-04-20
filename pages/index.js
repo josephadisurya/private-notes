@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import Head from 'next/head';
+import { jsPDF } from "jspdf";
 
 export default function Writer() {
   const [isDownloadOpen, setIsDownloadOpen] = useState(false);
@@ -85,6 +86,59 @@ export default function Writer() {
     link.click();
   };
 
+  // Download PDF
+  const downloadPdfFile = () => {
+  const fileTitle = title.trim() !== "" ? title : "Untitled";
+  const doc = new jsPDF({
+    unit: "mm",
+    format: "a4",
+  });
+
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const pageHeight = doc.internal.pageSize.getHeight();
+
+  const margin = 20;
+  const maxWidth = pageWidth - margin * 2;
+  const maxY = pageHeight - margin;
+
+  let y = margin; // ✅ same as left margin
+
+  // Title
+  doc.setFont("Helvetica", "bold");
+  doc.setFontSize(18);
+  doc.text(fileTitle, margin, y);
+  y += 10;
+
+  // Body
+  doc.setFont("Helvetica", "normal");
+  doc.setFontSize(11);
+
+  const bodyLines = doc.splitTextToSize(body, maxWidth);
+
+  bodyLines.forEach((line) => {
+    if (y > maxY) {
+      doc.addPage();
+      y = margin; // ✅ reset to top margin
+    }
+    doc.text(line, margin, y);
+    y += 6;
+  });
+
+  // Footer
+  if (footer) {
+    if (y + 10 > maxY) {
+      doc.addPage();
+      y = margin;
+    }
+
+    y += 10;
+    doc.setFontSize(9);
+    doc.setTextColor(150);
+    doc.text(footer, margin, y);
+  }
+
+  doc.save(`${fileTitle}.pdf`);
+};
 
   // Function to calculate word count for title and body
   const countWords = (title, body) => {
@@ -267,9 +321,21 @@ export default function Writer() {
                     }}
                     className="px-4 py-2 hover:bg-neutral-100 dark:hover:bg-neutral-700 text-left flex text-sm rounded-md transform-all duration-300"
                   >
-                     <div className="flex flex-row items-center justify-between w-full">
+                    <div className="flex flex-row items-center justify-between w-full">
                       <div className="flex w-fit">Markdown</div>
                       <div className="flex w-fit text-neutral-400">.md</div>
+                    </div>
+                  </button>
+                  <button
+                    onClick={() => {
+                      downloadPdfFile();
+                      setIsDownloadOpen(false);
+                    }}
+                    className="px-4 py-2 hover:bg-neutral-100 dark:hover:bg-neutral-700 text-left flex text-sm rounded-md transform-all duration-300"
+                  >
+                    <div className="flex flex-row items-center justify-between w-full">
+                      <div className="flex w-fit">PDF</div>
+                      <div className="flex w-fit text-neutral-400">.pdf</div>
                     </div>
                   </button>
                 </div>
@@ -357,9 +423,9 @@ export default function Writer() {
               <div className="border-t-[1px] border-black mb-5 mt-14 dark:border-white">Upcoming update</div>
               <ul className="list-disc pl-5">
                 <li>Add how to</li>
-                <li>Download as .md and .pdf options</li>
                 <li>Styling texts</li>
                 <li>Offline mode</li>
+                <li className="line-through text-neutral-400 dark:text-neutral-600">Download as .md and .pdf options</li>
                 <li className="line-through text-neutral-400 dark:text-neutral-600">Auto dark mode</li>
                 <li className="line-through text-neutral-400 dark:text-neutral-600">Add tooltips to buttons</li>
               </ul>
