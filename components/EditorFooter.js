@@ -1,5 +1,5 @@
 function countWords(title, body) {
-  const combinedText = `${title} ${body}`.trim();
+  const combinedText = `${title} ${body.replace(/<[^>]+>/g, " ")}`.trim();
   const words = combinedText.split(/\s+/);
   return words.length === 1 && words[0] === "" ? 0 : words.length;
 }

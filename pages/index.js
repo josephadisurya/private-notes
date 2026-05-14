@@ -32,23 +32,22 @@ export default function Writer() {
     textarea.style.height = `${textarea.scrollHeight}px`;
   };
 
-  // Adjust height when content changes
+  // Adjust height when title changes
   useEffect(() => {
     if (titleRef.current) adjustTextareaHeight(titleRef.current);
-    if (bodyRef.current) adjustTextareaHeight(bodyRef.current);
-  }, [title, body]);
+  }, [title]);
 
   // Re-adjust after fonts load so scrollHeight uses correct Satoshi metrics
   useEffect(() => {
     document.fonts.ready.then(() => {
       if (titleRef.current) adjustTextareaHeight(titleRef.current);
-      if (bodyRef.current) adjustTextareaHeight(bodyRef.current);
     });
   }, []);
 
   // Set footer timestamp on first keystroke, only if not already set
   useEffect(() => {
-    if (!footer && (title || body)) {
+    const bodyText = body.replace(/<[^>]+>/g, "").trim();
+    if (!footer && (title || bodyText)) {
       const now = new Date();
       setFooter(`Created on ${now.toLocaleString("en-US", { timeZoneName: "short" })}`);
     }
@@ -104,6 +103,55 @@ export default function Writer() {
 
   // --- Download helpers ---
 
+  const walkHtml = (html, onText, onBlock, onBr) => {
+    const container = document.createElement("div");
+    container.innerHTML = html;
+    const walk = (node) => {
+      if (node.nodeType === Node.TEXT_NODE) { onText(node.textContent || ""); return; }
+      if (node.nodeType !== Node.ELEMENT_NODE) return;
+      const tag = node.tagName.toLowerCase();
+      if (tag === "br") { onBr(); return; }
+      const isBlock = tag === "div" || tag === "p";
+      if (isBlock) {
+        onBlock();
+        const onlyBr = node.childNodes.length === 1 && node.firstChild?.tagName?.toLowerCase() === "br";
+        if (!onlyBr) for (const child of node.childNodes) walk(child);
+        return;
+      }
+      for (const child of node.childNodes) walk(child);
+    };
+    for (const child of container.childNodes) walk(child);
+  };
+
+  const stripHtml = (html) => {
+    const parts = [];
+    walkHtml(html,
+      (text) => parts.push(text),
+      () => parts.push("\n"),
+      () => parts.push("\n"),
+    );
+    return parts.join("").replace(/^\n+/, "").replace(/\n{3,}/g, "\n\n").trim();
+  };
+
+  const htmlToMd = (html) => {
+    return html
+      .replace(/<strong>([\s\S]*?)<\/strong>/gi, "**$1**")
+      .replace(/<b>([\s\S]*?)<\/b>/gi, "**$1**")
+      .replace(/<em>([\s\S]*?)<\/em>/gi, "*$1*")
+      .replace(/<i>([\s\S]*?)<\/i>/gi, "*$1*")
+      .replace(/<del>([\s\S]*?)<\/del>/gi, "~~$1~~")
+      .replace(/<s>([\s\S]*?)<\/s>/gi, "~~$1~~")
+      .replace(/<u>([\s\S]*?)<\/u>/gi, "_$1_")
+      .replace(/<br\s*\/?>/gi, "\n")
+      .replace(/<div>/gi, "\n")
+      .replace(/<\/div>/gi, "")
+      .replace(/<p>/gi, "\n")
+      .replace(/<\/p>/gi, "")
+      .replace(/<[^>]+>/g, "")
+      .replace(/\n{3,}/g, "\n\n")
+      .trim();
+  };
+
   const triggerToast = () => {
     clearTimeout(toastTimeoutRef.current);
     setShowToast(true);
@@ -114,7 +162,7 @@ export default function Writer() {
 
   const downloadTxtFile = () => {
     const fileTitle = title.trim() || getDefaultTitle();
-    const blob = new Blob([`${fileTitle}\n\n${body}`], { type: "text/plain" });
+    const blob = new Blob([`${fileTitle}\n\n${stripHtml(body)}`], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
@@ -126,7 +174,7 @@ export default function Writer() {
 
   const downloadMdFile = () => {
     const fileTitle = title.trim() || getDefaultTitle();
-    const blob = new Blob([`# ${fileTitle}\n\n${body}`], { type: "text/markdown" });
+    const blob = new Blob([`# ${fileTitle}\n\n${htmlToMd(body)}`], { type: "text/markdown" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
@@ -151,13 +199,93 @@ export default function Writer() {
     doc.text(fileTitle, margin, y);
     y += 10;
 
-    doc.setFont("Helvetica", "normal");
+    // Parse HTML body into styled segments
+    const lineHeight = 6;
     doc.setFontSize(11);
-    doc.splitTextToSize(body, maxWidth).forEach((line) => {
+
+    const container = document.createElement("div");
+    container.innerHTML = body;
+    const segments = [];
+
+    const nl = { text: "\n", bold: false, italic: false, underline: false, strike: false };
+
+    const walk = (node, styles) => {
+      if (node.nodeType === Node.TEXT_NODE) {
+        const text = node.textContent || "";
+        if (!text) return;
+        // Split on literal \n so legacy plain-text content with newlines works
+        const parts = text.split("\n");
+        parts.forEach((part, i) => {
+          if (part) segments.push({ text: part, ...styles });
+          if (i < parts.length - 1) segments.push(nl);
+        });
+        return;
+      }
+      if (node.nodeType !== Node.ELEMENT_NODE) return;
+      const tag = node.tagName.toLowerCase();
+      const s = { ...styles };
+      if (tag === "b" || tag === "strong") s.bold = true;
+      if (tag === "i" || tag === "em") s.italic = true;
+      if (tag === "u") s.underline = true;
+      if (tag === "del" || tag === "s") s.strike = true;
+      if (tag === "br") { segments.push(nl); return; }
+      if (tag === "div" || tag === "p") {
+        segments.push(nl);
+        // <div><br></div> is an empty line placeholder — skip the <br> child
+        // to avoid generating a double newline for a single blank line
+        const onlyBr = node.childNodes.length === 1 && node.firstChild?.tagName?.toLowerCase() === "br";
+        if (!onlyBr) for (const child of node.childNodes) walk(child, s);
+        return;
+      }
+      for (const child of node.childNodes) walk(child, s);
+    };
+
+    for (const child of container.childNodes) {
+      walk(child, { bold: false, italic: false, underline: false, strike: false });
+    }
+
+    // Render segments with inline styles
+    let curX = margin;
+    let firstContent = false;
+
+    const newLine = () => {
+      curX = margin;
+      y += lineHeight;
       if (y > maxY) { doc.addPage(); y = margin + 5; }
-      doc.text(line, margin, y);
-      y += 6;
-    });
+    };
+
+    for (const seg of segments) {
+      if (seg.text === "\n") {
+        if (firstContent) newLine();
+        continue;
+      }
+      firstContent = true;
+
+      let fontStyle = "normal";
+      if (seg.bold && seg.italic) fontStyle = "bolditalic";
+      else if (seg.bold) fontStyle = "bold";
+      else if (seg.italic) fontStyle = "italic";
+      doc.setFont("Helvetica", fontStyle);
+      doc.setTextColor(0);
+
+      for (const token of seg.text.split(/(\s+)/)) {
+        if (!token) continue;
+        const tw = doc.getTextWidth(token);
+        if (curX > margin && curX + tw > margin + maxWidth) newLine();
+        if (!(curX === margin && token.trim() === "")) {
+          doc.text(token, curX, y);
+          if (seg.underline) {
+            doc.setLineWidth(0.2);
+            doc.line(curX, y + 0.8, curX + tw, y + 0.8);
+          }
+          if (seg.strike) {
+            doc.setLineWidth(0.2);
+            doc.line(curX, y - 2.2, curX + tw, y - 2.2);
+          }
+        }
+        curX += tw;
+      }
+    }
 
     doc.save(`${fileTitle}.pdf`);
     triggerToast();

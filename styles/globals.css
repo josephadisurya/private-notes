@@ -13,3 +13,13 @@
     font-family: "Satoshi";
     font-feature-settings: "ss03";
   }
+
+  .body-editable:empty::before {
+    content: attr(data-placeholder);
+    color: #a3a3a3;
+    pointer-events: none;
+  }
+
+  .dark .body-editable:empty::before {
+    color: #525252;
+  }
