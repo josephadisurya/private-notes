@@ -144,7 +144,7 @@ export default function Writer() {
     const margin = 20;
     const maxWidth = pageWidth - margin * 2;
     const maxY = pageHeight - margin;
-    let y = margin;
+    let y = margin + 5;
 
     doc.setFont("Helvetica", "bold");
     doc.setFontSize(18);
@@ -154,13 +154,13 @@ export default function Writer() {
     doc.setFont("Helvetica", "normal");
     doc.setFontSize(11);
     doc.splitTextToSize(body, maxWidth).forEach((line) => {
-      if (y > maxY) { doc.addPage(); y = margin; }
+      if (y > maxY) { doc.addPage(); y = margin + 5; }
       doc.text(line, margin, y);
       y += 6;
     });
 
     if (footer) {
-      if (y + 10 > maxY) { doc.addPage(); y = margin; }
+      if (y + 10 > maxY) { doc.addPage(); y = margin + 5; }
       y += 10;
       doc.setFontSize(9);
       doc.setTextColor(150);
