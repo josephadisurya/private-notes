@@ -4,6 +4,7 @@ export default function EditorArea({ title, setTitle, body, setBody, titleRef, b
   const [showToolbar, setShowToolbar] = useState(false);
   const [toolbarPos, setToolbarPos] = useState(null);
   const [activeFormats, setActiveFormats] = useState({ bold: false, italic: false, underline: false, strikeThrough: false });
+  const [isBodyEmpty, setIsBodyEmpty] = useState(true);
   const isMobileRef = useRef(false);
   const loadedRef = useRef(false);
 
@@ -19,9 +20,11 @@ export default function EditorArea({ title, setTitle, body, setBody, titleRef, b
     if (body === "" && bodyRef.current) {
       bodyRef.current.innerHTML = "";
       loadedRef.current = false;
+      setIsBodyEmpty(true);
     } else if (!loadedRef.current && body && bodyRef.current) {
       bodyRef.current.innerHTML = body;
       loadedRef.current = true;
+      setIsBodyEmpty(bodyRef.current.textContent.trim() === "");
     }
   }, [body]);
 
@@ -92,12 +95,15 @@ export default function EditorArea({ title, setTitle, body, setBody, titleRef, b
           ref={bodyRef}
           contentEditable
           suppressContentEditableWarning
-          onInput={(e) => setBody(e.currentTarget.innerHTML)}
+          onInput={(e) => {
+            setBody(e.currentTarget.innerHTML);
+            setIsBodyEmpty(e.currentTarget.textContent.trim() === "");
+          }}
           onPaste={(e) => {
             e.preventDefault();
             document.execCommand("insertText", false, e.clipboardData.getData("text/plain"));
           }}
-          className="body-editable w-full mb-28 text-[17px] tracking-wide font-medium focus:outline-none focus:ring-0 special-t bg-white dark:bg-neutral-900"
+          className={`body-editable w-full mb-28 text-[17px] tracking-wide font-medium focus:outline-none focus:ring-0 special-t bg-white dark:bg-neutral-900 min-h-[60vh]${isBodyEmpty ? " show-placeholder" : ""}`}
           style={{ lineHeight: "32px", wordBreak: "break-word" }}
           data-placeholder="Type here"
         />

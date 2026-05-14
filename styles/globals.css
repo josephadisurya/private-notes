@@ -14,12 +14,12 @@
     font-feature-settings: "ss03";
   }
 
-  .body-editable:empty::before {
+  .body-editable.show-placeholder::before {
     content: attr(data-placeholder);
     color: #a3a3a3;
     pointer-events: none;
   }
 
-  .dark .body-editable:empty::before {
+  .dark .body-editable.show-placeholder::before {
     color: #525252;
   }
