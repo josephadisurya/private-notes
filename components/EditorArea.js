@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from "react";
 export default function EditorArea({ title, setTitle, body, setBody, titleRef, bodyRef, adjustTextareaHeight }) {
   const [showToolbar, setShowToolbar] = useState(false);
   const [toolbarPos, setToolbarPos] = useState(null);
+  const [activeFormats, setActiveFormats] = useState({ bold: false, italic: false, underline: false, strikeThrough: false });
   const isMobileRef = useRef(false);
   const loadedRef = useRef(false);
 
@@ -36,6 +37,12 @@ export default function EditorArea({ title, setTitle, body, setBody, titleRef, b
       }
 
       setShowToolbar(true);
+      setActiveFormats({
+        bold: document.queryCommandState("bold"),
+        italic: document.queryCommandState("italic"),
+        underline: document.queryCommandState("underline"),
+        strikeThrough: document.queryCommandState("strikeThrough"),
+      });
 
       if (!isMobileRef.current && selection.rangeCount > 0) {
         const rect = selection.getRangeAt(0).getBoundingClientRect();
@@ -52,13 +59,19 @@ export default function EditorArea({ title, setTitle, body, setBody, titleRef, b
   const applyFormat = (command) => {
     document.execCommand(command, false, null);
     setBody(bodyRef.current.innerHTML);
+    setActiveFormats({
+      bold: document.queryCommandState("bold"),
+      italic: document.queryCommandState("italic"),
+      underline: document.queryCommandState("underline"),
+      strikeThrough: document.queryCommandState("strikeThrough"),
+    });
   };
 
   const buttons = [
-    { label: "B", command: "bold", className: "font-bold" },
-    { label: "i", command: "italic", className: "italic" },
-    { label: "U", command: "underline", className: "underline" },
-    { label: "S", command: "strikeThrough", className: "line-through" },
+    { label: "B", command: "bold", activeKey: "bold", className: "font-bold" },
+    { label: "i", command: "italic", activeKey: "italic", className: "italic" },
+    { label: "U", command: "underline", activeKey: "underline", className: "underline" },
+    { label: "S", command: "strikeThrough", activeKey: "strikeThrough", className: "line-through" },
   ];
 
   return (
@@ -95,12 +108,12 @@ export default function EditorArea({ title, setTitle, body, setBody, titleRef, b
           className={`fixed z-50 special-t ${toolbarPos === null ? "bottom-36 left-1/2 -translate-x-1/2" : ""}`}
           style={toolbarPos ? { top: toolbarPos.top, left: toolbarPos.left, transform: "translateX(-50%)" } : {}}
         >
-          <div className="bg-white dark:bg-neutral-800 shadow-[0_4px_24px_rgba(0,0,0,0.12)] rounded-2xl p-1 flex flex-row">
-            {buttons.map(({ label, command, className }) => (
+          <div className="bg-white dark:bg-neutral-800 shadow-[0_4px_24px_rgba(0,0,0,0.12)] rounded-2xl p-1 flex flex-row gap-1">
+            {buttons.map(({ label, command, activeKey, className }) => (
               <button
                 key={command}
                 onMouseDown={(e) => { e.preventDefault(); applyFormat(command); }}
-                className={`w-9 h-9 flex items-center justify-center rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-700 text-sm transition-colors duration-200 ${className}`}
+                className={`w-9 h-9 flex items-center justify-center rounded-xl text-sm transition-colors duration-200 ${className} ${activeFormats[activeKey] ? "bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400" : "hover:bg-neutral-100 dark:hover:bg-neutral-700"}`}
               >
                 {label}
               </button>
