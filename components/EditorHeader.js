@@ -10,7 +10,7 @@ export default function EditorHeader({
   openInfoModal,
 }) {
   return (
-    <div className={`fixed top-0 self-end z-20 m-5 flex items-center gap-x-3 transition-opacity duration-500 ${iconsVisible ? "opacity-100" : "opacity-0 pointer-events-none"}`}>
+    <div className={`fixed top-0 self-end z-20 m-5 flex items-center gap-x-3 transition-opacity duration-500 ${iconsVisible || isDownloadOpen ? "opacity-100" : "opacity-0 pointer-events-none"}`}>
 
       {/* Download Button */}
       <div ref={downloadRef} className="relative flex justify-center group">
@@ -25,14 +25,14 @@ export default function EditorHeader({
         <div className="text-xs absolute z-20 mt-10 dark:text-white text-black invisible lg:group-hover:visible">Download</div>
 
         {isDownloadOpen && (
-          <div className="absolute top-10 right-0 bg-white dark:bg-neutral-800 shadow-[0_4px_24px_rgba(0,0,0,0.12)] rounded-2xl z-30 p-3 flex flex-col w-[260px]">
+          <div className="absolute top-10 right-0 bg-white dark:bg-neutral-800 shadow-[0_4px_24px_rgba(0,0,0,0.12)] rounded-2xl z-30 p-3 flex flex-col w-[260px] special-t">
             <button
-              onClick={() => { downloadPdfFile(); setIsDownloadOpen(false); }}
+              onClick={() => { downloadTxtFile(); setIsDownloadOpen(false); }}
               className="px-4 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-700 text-left flex text-base rounded-xl transition-colors duration-200"
             >
               <div className="flex flex-row items-center justify-between w-full">
-                <div>PDF</div>
-                <div className="text-neutral-400">.pdf</div>
+                <div>Text</div>
+                <div className="text-neutral-400">.txt</div>
               </div>
             </button>
             <button
@@ -45,12 +45,12 @@ export default function EditorHeader({
               </div>
             </button>
             <button
-              onClick={() => { downloadTxtFile(); setIsDownloadOpen(false); }}
+              onClick={() => { downloadPdfFile(); setIsDownloadOpen(false); }}
               className="px-4 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-700 text-left flex text-base rounded-xl transition-colors duration-200"
             >
               <div className="flex flex-row items-center justify-between w-full">
-                <div>Text</div>
-                <div className="text-neutral-400">.txt</div>
+                <div>PDF</div>
+                <div className="text-neutral-400">.pdf</div>
               </div>
             </button>
           </div>

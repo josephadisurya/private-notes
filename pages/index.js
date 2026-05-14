@@ -16,11 +16,13 @@ export default function Writer() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isInfoOpen, setIsInfoOpen] = useState(false);
   const [iconsVisible, setIconsVisible] = useState(true);
+  const [showToast, setShowToast] = useState(false);
 
   const titleRef = useRef(null);
   const bodyRef = useRef(null);
   const downloadRef = useRef(null);
   const hasMounted = useRef(false);
+  const toastTimeoutRef = useRef(null);
   let timeoutId = null;
 
   const adjustTextareaHeight = (textarea) => {
@@ -102,6 +104,12 @@ export default function Writer() {
 
   // --- Download helpers ---
 
+  const triggerToast = () => {
+    clearTimeout(toastTimeoutRef.current);
+    setShowToast(true);
+    toastTimeoutRef.current = setTimeout(() => setShowToast(false), 2500);
+  };
+
   const getDefaultTitle = () => `Untitled-${new Date().toISOString().slice(0, 10)}`;
 
   const downloadTxtFile = () => {
@@ -113,6 +121,7 @@ export default function Writer() {
     link.download = `${fileTitle}.txt`;
     link.click();
     URL.revokeObjectURL(url);
+    triggerToast();
   };
 
   const downloadMdFile = () => {
@@ -124,6 +133,7 @@ export default function Writer() {
     link.download = `${fileTitle}.md`;
     link.click();
     URL.revokeObjectURL(url);
+    triggerToast();
   };
 
   const downloadPdfFile = () => {
@@ -158,6 +168,7 @@ export default function Writer() {
     }
 
     doc.save(`${fileTitle}.pdf`);
+    triggerToast();
   };
 
   // --- Modal handlers ---
@@ -232,6 +243,12 @@ export default function Writer() {
           openClearModal={() => setIsModalOpen(true)}
           openInfoModal={() => setIsInfoOpen(true)}
         />
+      </div>
+
+      <div className={`fixed bottom-24 left-1/2 -translate-x-1/2 z-40 transition-opacity duration-500 ${showToast ? "opacity-100" : "opacity-0 pointer-events-none"}`}>
+        <div className="bg-white dark:bg-neutral-800 shadow-[0_4px_24px_rgba(0,0,0,0.12)] rounded-2xl px-5 py-3 text-xs whitespace-nowrap">
+          Download successful!
+        </div>
       </div>
 
       <ClearModal

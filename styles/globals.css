@@ -9,7 +9,7 @@
     src: url("../public/font/Satoshi-Variable.ttf");
 }
 
-  .special-t {
+  .special-t, .special-t * {
     font-family: "Satoshi";
     font-feature-settings: "ss03";
   }
