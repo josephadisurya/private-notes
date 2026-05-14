@@ -14,7 +14,7 @@ export default function InfoModal({ isInfoOpen, closeInfoModal }) {
 
           <div className="border-t-[1px] border-black mb-5 dark:border-white">About</div>
           <div className="w-full max-w-5xl mb-5">
-            This project aims to offer a free, distraction-free text editor, that allows users to focus on writing without unnecessary interruptions. This project also includes the option to download the content in *.txt, a universally accessible file formats, ensuring compatibility across platforms and operating systems. The downloaded file will mark the date and time when the content is created.
+            This project aims to offer a free, distraction-free text editor, that allows users to focus on writing without unnecessary interruptions. This project also includes the option to download the content in *.txt, *.md, and *.pdf, universally accessible file formats, ensuring compatibility across platforms and operating systems. The downloaded file will mark the date and time when the content is created.
             <br /><br />
             The content is stored locally in the browser, no one can see it but you. It will stay in the browser, unless you clear the cookies, or click the clear button.
             <br /><br />

@@ -114,7 +114,7 @@ export default function Writer() {
 
   const downloadTxtFile = () => {
     const fileTitle = title.trim() || getDefaultTitle();
-    const blob = new Blob([`${fileTitle}\n\n${body}\n\n${footer}`], { type: "text/plain" });
+    const blob = new Blob([`${fileTitle}\n\n${body}`], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
@@ -126,7 +126,7 @@ export default function Writer() {
 
   const downloadMdFile = () => {
     const fileTitle = title.trim() || getDefaultTitle();
-    const blob = new Blob([`# ${fileTitle}\n\n${body}\n\n---\n${footer}`], { type: "text/markdown" });
+    const blob = new Blob([`# ${fileTitle}\n\n${body}`], { type: "text/markdown" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
@@ -158,14 +158,6 @@ export default function Writer() {
       doc.text(line, margin, y);
       y += 6;
     });
-
-    if (footer) {
-      if (y + 10 > maxY) { doc.addPage(); y = margin + 5; }
-      y += 10;
-      doc.setFontSize(9);
-      doc.setTextColor(150);
-      doc.text(footer, margin, y);
-    }
 
     doc.save(`${fileTitle}.pdf`);
     triggerToast();
