@@ -91,23 +91,36 @@ export default function EditorArea({ title, setTitle, body, setBody, titleRef, b
           ref={titleRef}
         />
 
-        <div
-          ref={bodyRef}
-          contentEditable
-          suppressContentEditableWarning
-          onInput={(e) => {
-            loadedRef.current = true;
-            setBody(e.currentTarget.innerHTML);
-            setIsBodyEmpty(e.currentTarget.textContent.trim() === "");
-          }}
-          onPaste={(e) => {
-            e.preventDefault();
-            document.execCommand("insertText", false, e.clipboardData.getData("text/plain"));
-          }}
-          className={`body-editable w-full mb-28 text-[17px] tracking-wide font-medium focus:outline-none focus:ring-0 special-t bg-white dark:bg-neutral-900 min-h-[60vh]${isBodyEmpty ? " show-placeholder" : ""}`}
-          style={{ lineHeight: "32px", wordBreak: "break-word" }}
-          data-placeholder="Type here"
-        />
+        <div className="relative">
+          <div
+            ref={bodyRef}
+            contentEditable
+            suppressContentEditableWarning
+            onInput={(e) => {
+              loadedRef.current = true;
+              setBody(e.currentTarget.innerHTML);
+              setIsBodyEmpty(e.currentTarget.textContent.trim() === "");
+            }}
+            onPaste={(e) => {
+              e.preventDefault();
+              document.execCommand("insertText", false, e.clipboardData.getData("text/plain"));
+            }}
+            className="w-full mb-28 text-[17px] tracking-wide font-medium focus:outline-none focus:ring-0 special-t bg-white dark:bg-neutral-900 min-h-[60vh]"
+            style={{ lineHeight: "32px", wordBreak: "break-word" }}
+          />
+          {isBodyEmpty && (
+            <div
+              className="absolute top-0 left-0 pointer-events-none select-none text-neutral-400 dark:text-neutral-500 text-[17px] tracking-wide font-medium"
+              style={{ lineHeight: "32px" }}
+            >
+              <div className="font-bold">You can start typing here...</div>
+              <div>&nbsp;</div>
+              <div className="flex gap-2"><span>•</span><span>Style your words with bold, italic, or strikethrough by selecting it.</span></div>
+              <div className="flex gap-2"><span>•</span><span>Download it into a file.</span></div>
+              <div className="flex gap-2"><span>•</span><span>Clear all and start over.</span></div>
+            </div>
+          )}
+        </div>
       </div>
 
       {showToolbar && (

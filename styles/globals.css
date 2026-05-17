@@ -14,14 +14,3 @@
     font-feature-settings: "ss03";
   }
 
-  .body-editable.show-placeholder::before {
-    content: attr(data-placeholder);
-    color: #a3a3a3;
-    pointer-events: none;
-  }
-
-  @media (prefers-color-scheme: dark) {
-    .body-editable.show-placeholder::before {
-      color: #737373;
-    }
-  }
