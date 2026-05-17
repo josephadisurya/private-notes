@@ -23,7 +23,7 @@ export default function Writer() {
   const downloadRef = useRef(null);
   const hasMounted = useRef(false);
   const toastTimeoutRef = useRef(null);
-  let timeoutId = null;
+  const timeoutIdRef = useRef(null);
 
   const adjustTextareaHeight = (textarea) => {
     if (!textarea || !(textarea instanceof HTMLElement)) return;
@@ -78,15 +78,15 @@ export default function Writer() {
   // Hide UI after 5s of no mouse movement
   const handleMouseMove = () => {
     setIconsVisible(true);
-    clearTimeout(timeoutId);
-    timeoutId = setTimeout(() => setIconsVisible(false), 5000);
+    clearTimeout(timeoutIdRef.current);
+    timeoutIdRef.current = setTimeout(() => setIconsVisible(false), 5000);
   };
 
   useEffect(() => {
     document.addEventListener("mousemove", handleMouseMove);
     return () => {
       document.removeEventListener("mousemove", handleMouseMove);
-      clearTimeout(timeoutId);
+      clearTimeout(timeoutIdRef.current);
     };
   }, []);
 

@@ -96,6 +96,7 @@ export default function EditorArea({ title, setTitle, body, setBody, titleRef, b
           contentEditable
           suppressContentEditableWarning
           onInput={(e) => {
+            loadedRef.current = true;
             setBody(e.currentTarget.innerHTML);
             setIsBodyEmpty(e.currentTarget.textContent.trim() === "");
           }}
