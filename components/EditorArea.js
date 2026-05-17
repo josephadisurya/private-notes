@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from "react";
-import FormatBar from "@/components/FormatBar";
 
 export default function EditorArea({ title, setTitle, body, setBody, titleRef, bodyRef, adjustTextareaHeight, keyboardHeight }) {
   const [showToolbar, setShowToolbar] = useState(false);
@@ -71,6 +70,13 @@ export default function EditorArea({ title, setTitle, body, setBody, titleRef, b
     });
   };
 
+  const buttons = [
+    { label: "B", command: "bold", activeKey: "bold", className: "font-bold" },
+    { label: "i", command: "italic", activeKey: "italic", className: "italic" },
+    { label: "U", command: "underline", activeKey: "underline", className: "underline" },
+    { label: "S", command: "strikeThrough", activeKey: "strikeThrough", className: "line-through" },
+  ];
+
   return (
     <>
       <div className="w-full max-w-3xl px-8">
@@ -107,9 +113,8 @@ export default function EditorArea({ title, setTitle, body, setBody, titleRef, b
               className="absolute top-0 left-0 pointer-events-none select-none text-neutral-400 dark:text-neutral-500 text-[17px] tracking-wide font-medium"
               style={{ lineHeight: "32px" }}
             >
-              <div className="font-bold">You can start typing here...</div>
-              <div>&nbsp;</div>
-              <div className="flex gap-2"><span>•</span><span>Style your words with bold, italic, or strikethrough by selecting it.</span></div>
+              <div className="">You can start typing here, you can also...</div>
+              <div className="flex gap-2"><span>•</span><span>Select words to style it.</span></div>
               <div className="flex gap-2"><span>•</span><span>Download it into a file.</span></div>
               <div className="flex gap-2"><span>•</span><span>Clear all and start over.</span></div>
             </div>
@@ -117,13 +122,27 @@ export default function EditorArea({ title, setTitle, body, setBody, titleRef, b
         </div>
       </div>
 
-      <FormatBar
-        show={showToolbar}
-        toolbarPos={toolbarPos}
-        keyboardHeight={keyboardHeight}
-        activeFormats={activeFormats}
-        onFormat={applyFormat}
-      />
+      {showToolbar && (
+        <div
+          className={`fixed z-50 special-t ${toolbarPos === null ? "left-1/2 -translate-x-1/2" : ""}`}
+          style={toolbarPos
+            ? { top: toolbarPos.top, left: toolbarPos.left, transform: "translateX(-50%)" }
+            : { bottom: Math.max(144, keyboardHeight + 16), transition: "bottom 0.2s ease" }
+          }
+        >
+          <div className="bg-white dark:bg-neutral-800 shadow-[0_4px_24px_rgba(0,0,0,0.12)] rounded-2xl p-1 flex flex-row gap-1">
+            {buttons.map(({ label, command, activeKey, className }) => (
+              <button
+                key={command}
+                onMouseDown={(e) => { e.preventDefault(); applyFormat(command); }}
+                className={`w-9 h-9 flex items-center justify-center rounded-xl text-sm transition-colors duration-200 ${className} ${activeFormats[activeKey] ? "bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400" : "hover:bg-neutral-100 dark:hover:bg-neutral-700"}`}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
     </>
   );
 }

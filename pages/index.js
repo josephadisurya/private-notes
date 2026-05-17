@@ -50,7 +50,14 @@ export default function Writer() {
     const bodyText = body.replace(/<[^>]+>/g, "").trim();
     if (!footer && (title || bodyText)) {
       const now = new Date();
-      setFooter(`Created on ${now.toLocaleString("en-US", { timeZoneName: "short" })}`);
+      const day = now.getDate();
+      const month = now.toLocaleString("en-US", { month: "long" });
+      const year = now.getFullYear();
+      const h = now.getHours();
+      const min = now.getMinutes().toString().padStart(2, "0");
+      const ampm = h >= 12 ? "PM" : "AM";
+      const hour = h % 12 || 12;
+      setFooter(`Created on ${day} ${month} ${year}, ${hour}.${min}${ampm}`);
     }
   }, [title, body, footer]);
 
