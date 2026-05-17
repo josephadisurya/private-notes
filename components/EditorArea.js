@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 
-export default function EditorArea({ title, setTitle, body, setBody, titleRef, bodyRef, adjustTextareaHeight }) {
+export default function EditorArea({ title, setTitle, body, setBody, titleRef, bodyRef, adjustTextareaHeight, keyboardHeight }) {
   const [showToolbar, setShowToolbar] = useState(false);
   const [toolbarPos, setToolbarPos] = useState(null);
   const [activeFormats, setActiveFormats] = useState({ bold: false, italic: false, underline: false, strikeThrough: false });
@@ -125,8 +125,11 @@ export default function EditorArea({ title, setTitle, body, setBody, titleRef, b
 
       {showToolbar && (
         <div
-          className={`fixed z-50 special-t ${toolbarPos === null ? "bottom-36 left-1/2 -translate-x-1/2" : ""}`}
-          style={toolbarPos ? { top: toolbarPos.top, left: toolbarPos.left, transform: "translateX(-50%)" } : {}}
+          className={`fixed z-50 special-t ${toolbarPos === null ? "left-1/2 -translate-x-1/2" : ""}`}
+          style={toolbarPos
+            ? { top: toolbarPos.top, left: toolbarPos.left, transform: "translateX(-50%)" }
+            : { bottom: keyboardHeight + 16, transition: "bottom 0.2s ease" }
+          }
         >
           <div className="bg-white dark:bg-neutral-800 shadow-[0_4px_24px_rgba(0,0,0,0.12)] rounded-2xl p-1 flex flex-row gap-1">
             {buttons.map(({ label, command, activeKey, className }) => (

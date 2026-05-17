@@ -17,6 +17,7 @@ export default function Writer() {
   const [isInfoOpen, setIsInfoOpen] = useState(false);
   const [iconsVisible, setIconsVisible] = useState(true);
   const [showToast, setShowToast] = useState(false);
+  const [keyboardHeight, setKeyboardHeight] = useState(0);
 
   const titleRef = useRef(null);
   const bodyRef = useRef(null);
@@ -87,6 +88,21 @@ export default function Writer() {
     return () => {
       document.removeEventListener("mousemove", handleMouseMove);
       clearTimeout(timeoutIdRef.current);
+    };
+  }, []);
+
+  // Track keyboard height via Visual Viewport API
+  useEffect(() => {
+    if (typeof window === "undefined" || !window.visualViewport) return;
+    const handler = () => {
+      const h = window.innerHeight - window.visualViewport.offsetTop - window.visualViewport.height;
+      setKeyboardHeight(Math.max(0, h));
+    };
+    window.visualViewport.addEventListener("resize", handler);
+    window.visualViewport.addEventListener("scroll", handler);
+    return () => {
+      window.visualViewport.removeEventListener("resize", handler);
+      window.visualViewport.removeEventListener("scroll", handler);
     };
   }, []);
 
@@ -343,6 +359,7 @@ export default function Writer() {
           titleRef={titleRef}
           bodyRef={bodyRef}
           adjustTextareaHeight={adjustTextareaHeight}
+          keyboardHeight={keyboardHeight}
         />
 
         <EditorFooter
