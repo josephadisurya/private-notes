@@ -81,7 +81,7 @@ export default function EditorArea({ title, setTitle, body, setBody, titleRef, b
     <>
       <div className="w-full max-w-3xl px-8">
         <textarea
-          className="w-full mb-14 tracking-wide text-[17px] font-bold focus:outline-none focus:ring-0 special-t placeholder:text-neutral-400 dark:placeholder:text-neutral-600 dark:bg-neutral-900"
+          className="w-full mb-14 tracking-wide text-[17px] font-bold focus:outline-none focus:ring-0 special-t placeholder:text-neutral-400 dark:placeholder:text-neutral-500 dark:bg-neutral-900"
           placeholder="Title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}

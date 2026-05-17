@@ -10,7 +10,7 @@
 }
 
   .special-t, .special-t * {
-    font-family: "Satoshi";
+    font-family: "Satoshi", sans-serif;
     font-feature-settings: "ss03";
   }
 
@@ -20,6 +20,8 @@
     pointer-events: none;
   }
 
-  .dark .body-editable.show-placeholder::before {
-    color: #525252;
+  @media (prefers-color-scheme: dark) {
+    .body-editable.show-placeholder::before {
+      color: #737373;
+    }
   }
