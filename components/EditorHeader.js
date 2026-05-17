@@ -1,3 +1,5 @@
+import { useState, useEffect, useRef } from "react";
+
 export default function EditorHeader({
   iconsVisible,
   isDownloadOpen,
@@ -8,9 +10,52 @@ export default function EditorHeader({
   downloadTxtFile,
   openClearModal,
   openInfoModal,
+  font,
+  setFont,
 }) {
+  const [isFontOpen, setIsFontOpen] = useState(false);
+  const fontRef = useRef(null);
+
+  useEffect(() => {
+    const handler = (e) => {
+      if (fontRef.current && !fontRef.current.contains(e.target)) setIsFontOpen(false);
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
   return (
-    <div className={`fixed top-0 self-end z-20 m-5 flex items-center gap-x-3 transition-opacity duration-500 ${iconsVisible || isDownloadOpen ? "opacity-100" : "opacity-0 pointer-events-none"}`}>
+    <div className={`fixed top-0 self-end z-20 m-5 flex items-center gap-x-3 transition-opacity duration-500 ${iconsVisible || isDownloadOpen || isFontOpen ? "opacity-100" : "opacity-0 pointer-events-none"}`}>
+
+      {/* Font Picker Button */}
+      <div ref={fontRef} className="relative flex justify-center group">
+        <button
+          onClick={() => setIsFontOpen((prev) => !prev)}
+          className="text-neutral-400 hover:text-black dark:hover:text-white w-[30px] h-[30px] flex items-center justify-center transition-all duration-500 text-lg font-semibold"
+        >
+          Aa
+        </button>
+        <div className="text-xs absolute z-20 mt-10 dark:text-white text-black invisible lg:group-hover:visible">Font</div>
+
+        {isFontOpen && (
+          <div className="fixed top-16 right-5 w-[260px] lg:absolute lg:top-10 lg:right-0 bg-white dark:bg-neutral-800 shadow-[0_4px_24px_rgba(0,0,0,0.12)] rounded-2xl z-30 p-3 flex flex-col gap-1 special-t">
+            <button
+              onClick={() => { setFont("sans"); setIsFontOpen(false); }}
+              className={`px-4 py-3 text-left flex items-center justify-between w-full text-base rounded-xl transition-colors duration-200 ${font === "sans" ? "bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400" : "hover:bg-neutral-100 dark:hover:bg-neutral-700"}`}
+            >
+              <span>Sans Serif</span>
+              <span className="text-neutral-400" style={{ fontFamily: '"Satoshi", sans-serif' }}>Aa</span>
+            </button>
+            <button
+              onClick={() => { setFont("serif"); setIsFontOpen(false); }}
+              className={`px-4 py-3 text-left flex items-center justify-between w-full text-base rounded-xl transition-colors duration-200 ${font === "serif" ? "bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400" : "hover:bg-neutral-100 dark:hover:bg-neutral-700"}`}
+            >
+              <span>Serif</span>
+              <span className="text-neutral-400" style={{ fontFamily: '"EB Garamond", Georgia, serif' }}>Aa</span>
+            </button>
+          </div>
+        )}
+      </div>
 
       {/* Download Button */}
       <div ref={downloadRef} className="relative flex justify-center group">
@@ -25,7 +70,7 @@ export default function EditorHeader({
         <div className="text-xs absolute z-20 mt-10 dark:text-white text-black invisible lg:group-hover:visible">Download</div>
 
         {isDownloadOpen && (
-          <div className="absolute top-10 right-0 bg-white dark:bg-neutral-800 shadow-[0_4px_24px_rgba(0,0,0,0.12)] rounded-2xl z-30 p-3 flex flex-col w-[260px] special-t">
+          <div className="fixed top-16 right-5 w-[260px] lg:absolute lg:top-10 lg:right-0 bg-white dark:bg-neutral-800 shadow-[0_4px_24px_rgba(0,0,0,0.12)] rounded-2xl z-30 p-3 flex flex-col gap-1 special-t">
             <button
               onClick={() => { downloadTxtFile(); setIsDownloadOpen(false); }}
               className="px-4 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-700 text-left flex text-base rounded-xl transition-colors duration-200"

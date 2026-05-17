@@ -18,6 +18,7 @@ export default function Writer() {
   const [iconsVisible, setIconsVisible] = useState(true);
   const [showToast, setShowToast] = useState(false);
   const [keyboardHeight, setKeyboardHeight] = useState(0);
+  const [font, setFont] = useState("sans");
 
   const titleRef = useRef(null);
   const bodyRef = useRef(null);
@@ -367,6 +368,7 @@ export default function Writer() {
           bodyRef={bodyRef}
           adjustTextareaHeight={adjustTextareaHeight}
           keyboardHeight={keyboardHeight}
+          font={font}
         />
 
         <EditorFooter
@@ -386,6 +388,8 @@ export default function Writer() {
           downloadTxtFile={downloadTxtFile}
           openClearModal={() => setIsModalOpen(true)}
           openInfoModal={() => setIsInfoOpen(true)}
+          font={font}
+          setFont={setFont}
         />
       </div>
 

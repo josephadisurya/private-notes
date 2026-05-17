@@ -12,7 +12,7 @@ export default function EditorFooter({ iconsVisible, footer, title, body }) {
       {/* gradient fade */}
       <div className="w-full h-20 bg-gradient-to-t from-white dark:from-neutral-900 to-transparent" />
       {/* solid background with text */}
-      <div className="bg-white dark:bg-neutral-900 flex justify-between items-end px-5 pb-5 pt-1">
+      <div className="bg-white dark:bg-neutral-900 flex justify-between items-end px-8 pb-5 pt-1">
         <div className="text-xs dark:text-neutral-400 text-neutral-500 max-w-[240px] pointer-events-auto">
           {footer || "Only you can see what you write. Content is stored locally."}
         </div>

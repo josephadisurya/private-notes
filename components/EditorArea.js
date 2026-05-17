@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 
-export default function EditorArea({ title, setTitle, body, setBody, titleRef, bodyRef, adjustTextareaHeight, keyboardHeight }) {
+export default function EditorArea({ title, setTitle, body, setBody, titleRef, bodyRef, adjustTextareaHeight, keyboardHeight, font }) {
   const [showToolbar, setShowToolbar] = useState(false);
   const [toolbarPos, setToolbarPos] = useState(null);
   const [activeFormats, setActiveFormats] = useState({ bold: false, italic: false, underline: false, strikeThrough: false });
@@ -77,11 +77,13 @@ export default function EditorArea({ title, setTitle, body, setBody, titleRef, b
     { label: "S", command: "strikeThrough", activeKey: "strikeThrough", className: "line-through" },
   ];
 
+  const fontClass = font === "serif" ? "serif-t" : "special-t";
+
   return (
     <>
       <div className="w-full max-w-3xl px-8">
         <textarea
-          className="w-full mb-14 tracking-wide text-[17px] font-bold focus:outline-none focus:ring-0 special-t placeholder:text-neutral-400 dark:placeholder:text-neutral-500 dark:bg-neutral-900"
+          className={`w-full mb-14 tracking-wide text-[17px] font-bold focus:outline-none focus:ring-0 ${fontClass} placeholder:text-neutral-400 dark:placeholder:text-neutral-500 dark:bg-neutral-900`}
           placeholder="Title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
@@ -105,17 +107,18 @@ export default function EditorArea({ title, setTitle, body, setBody, titleRef, b
               e.preventDefault();
               document.execCommand("insertText", false, e.clipboardData.getData("text/plain"));
             }}
-            className="w-full mb-28 text-[17px] tracking-wide font-medium focus:outline-none focus:ring-0 special-t bg-white dark:bg-neutral-900 min-h-[60vh]"
+            className={`w-full mb-28 text-[17px] tracking-wide font-medium focus:outline-none focus:ring-0 ${fontClass} bg-white dark:bg-neutral-900 min-h-[60vh]`}
             style={{ lineHeight: "32px", wordBreak: "break-word" }}
           />
           {isBodyEmpty && (
             <div
-              className="absolute top-0 left-0 pointer-events-none select-none text-neutral-400 dark:text-neutral-500 text-[17px] tracking-wide font-medium"
+              className={`absolute top-0 left-0 pointer-events-none select-none text-neutral-400 dark:text-neutral-500 text-[17px] tracking-wide font-medium ${fontClass}`}
               style={{ lineHeight: "32px" }}
             >
               <div className="">You can start typing here, you can also...</div>
               <div className="flex gap-2"><span>•</span><span>Select words to style it.</span></div>
               <div className="flex gap-2"><span>•</span><span>Download it into a file.</span></div>
+              <div className="flex gap-2"><span>•</span><span>Choose the font style.</span></div>
               <div className="flex gap-2"><span>•</span><span>Clear all and start over.</span></div>
             </div>
           )}

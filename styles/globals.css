@@ -14,3 +14,8 @@
     font-feature-settings: "ss03";
   }
 
+  .serif-t, .serif-t * {
+    font-family: "EB Garamond", Georgia, serif;
+    font-feature-settings: normal;
+  }
+
