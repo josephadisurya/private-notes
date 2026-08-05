@@ -35,8 +35,7 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# PWA build artifacts (generated at build time)
-/public/sw.js
+# PWA workbox build artifacts
 /public/sw.js.map
 /public/workbox-*.js
 /public/workbox-*.js.map
