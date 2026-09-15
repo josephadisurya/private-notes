@@ -185,8 +185,10 @@ export default function Writer() {
   const getDefaultTitle = () => `Untitled-${new Date().toISOString().slice(0, 10)}`;
 
   const downloadTxtFile = () => {
+    const hasTitle = title.trim().length > 0;
     const fileTitle = title.trim() || getDefaultTitle();
-    const blob = new Blob([`${fileTitle}\n\n${stripHtml(body)}`], { type: "text/plain" });
+    const content = hasTitle ? `${fileTitle}\n\n${stripHtml(body)}` : stripHtml(body);
+    const blob = new Blob([content], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
@@ -197,8 +199,10 @@ export default function Writer() {
   };
 
   const downloadMdFile = () => {
+    const hasTitle = title.trim().length > 0;
     const fileTitle = title.trim() || getDefaultTitle();
-    const blob = new Blob([`# ${fileTitle}\n\n${htmlToMd(body)}`], { type: "text/markdown" });
+    const content = hasTitle ? `# ${fileTitle}\n\n${htmlToMd(body)}` : htmlToMd(body);
+    const blob = new Blob([content], { type: "text/markdown" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
@@ -209,6 +213,7 @@ export default function Writer() {
   };
 
   const downloadPdfFile = () => {
+    const hasTitle = title.trim().length > 0;
     const fileTitle = title.trim() || getDefaultTitle();
     const doc = new jsPDF({ unit: "mm", format: "a4" });
     const pageWidth = doc.internal.pageSize.getWidth();
@@ -218,10 +223,12 @@ export default function Writer() {
     const maxY = pageHeight - margin;
     let y = margin + 5;
 
-    doc.setFont("Helvetica", "bold");
-    doc.setFontSize(18);
-    doc.text(fileTitle, margin, y);
-    y += 10;
+    if (hasTitle) {
+      doc.setFont("Helvetica", "bold");
+      doc.setFontSize(18);
+      doc.text(fileTitle, margin, y);
+      y += 10;
+    }
 
     // Parse HTML body into styled segments
     const lineHeight = 6;
