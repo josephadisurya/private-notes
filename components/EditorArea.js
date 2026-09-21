@@ -206,7 +206,7 @@ export default function EditorArea({ title, setTitle, body, setBody, titleRef, b
       </div>
 
       {toolbarSlot && createPortal(
-        <div className="special-t bg-white dark:bg-neutral-800 beige:bg-[#fbf6e9] shadow-[0_4px_24px_rgba(0,0,0,0.12)] rounded-2xl p-1 flex flex-row gap-1">
+        <div className="special-t bg-white dark:bg-neutral-800 beige:bg-[#fbf6e9] shadow-[0_2px_8px_rgba(0,0,0,0.1)] rounded-2xl p-1 flex flex-row gap-1">
           {buttons.map(({ label, command, activeKey, className }) => (
             <button
               key={command}
