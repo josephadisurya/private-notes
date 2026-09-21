@@ -3,7 +3,7 @@ export default function ClearModal({ isModalOpen, clearContent, cancelClear }) {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-20 backdrop-blur-sm flex items-center justify-center z-30">
-      <div className="bg-white dark:bg-neutral-800 beige:bg-[#f7f0dc] p-6 md:p-12 shadow-lg min-w-[250px] rounded-lg justify-center special-t">
+      <div className="bg-white dark:bg-neutral-800 beige:bg-[#fbf6e9] p-6 md:p-12 shadow-lg min-w-[250px] rounded-lg justify-center special-t">
         <h2 className="text-base font-medium mb-8">Are you sure you want to clear all?</h2>
         <div className="flex justify-between gap-x-3 w-full">
           <button
@@ -14,7 +14,7 @@ export default function ClearModal({ isModalOpen, clearContent, cancelClear }) {
           </button>
           <button
             onClick={cancelClear}
-            className="text-black dark:text-white px-4 py-2 hover:bg-neutral-200 dark:hover:bg-neutral-700 beige:hover:bg-[#ecdfc0] border-[1px] border-neutral-200 dark:border-neutral-600 beige:border-[#d9c48f] rounded-md duration-500 transform-all w-full text-sm"
+            className="text-black dark:text-white beige:text-[#463a25] px-4 py-2 hover:bg-neutral-200 dark:hover:bg-neutral-700 beige:hover:bg-[#f0e2be] border-[1px] border-neutral-200 dark:border-neutral-600 beige:border-[#dcc896] rounded-md duration-500 transform-all w-full text-sm"
           >
             Cancel
           </button>

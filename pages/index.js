@@ -64,7 +64,7 @@ export default function Writer() {
   useEffect(() => {
     const meta = document.querySelector('meta[name="theme-color"]');
     if (!meta) return;
-    meta.setAttribute("content", theme === "dark" ? "#171717" : theme === "beige" ? "#f2e8d5" : "#ffffff");
+    meta.setAttribute("content", theme === "dark" ? "#171717" : theme === "beige" ? "#f8efdb" : "#ffffff");
   }, [theme]);
 
   // Set footer timestamp on first keystroke, only if not already set
@@ -235,11 +235,11 @@ export default function Writer() {
 
   // RGB triples matching each theme's actual on-screen colors (light bg
   // #ffffff/black text, dark bg #171717 (neutral-900)/white text, beige bg
-  // #f2e8d5/black text — see the beige: overrides in the components).
+  // #f8efdb/text #463a25 — see the beige: overrides in the components).
   const PDF_THEME_COLORS = {
     light: { bg: [255, 255, 255], text: [0, 0, 0] },
     dark: { bg: [23, 23, 23], text: [255, 255, 255] },
-    beige: { bg: [242, 232, 213], text: [0, 0, 0] },
+    beige: { bg: [248, 239, 219], text: [70, 58, 37] },
   };
 
   const downloadPdfFile = async (pdfTheme = theme) => {
@@ -474,7 +474,7 @@ export default function Writer() {
       </div>
 
       <div className={`fixed bottom-24 left-1/2 -translate-x-1/2 z-40 transition-opacity duration-500 ${showToast ? "opacity-100" : "opacity-0 pointer-events-none"}`}>
-        <div className="bg-white dark:bg-neutral-800 beige:bg-[#f7f0dc] shadow-[0_4px_24px_rgba(0,0,0,0.12)] rounded-2xl px-5 py-3 text-xs whitespace-nowrap">
+        <div className="bg-white dark:bg-neutral-800 beige:bg-[#fbf6e9] shadow-[0_4px_24px_rgba(0,0,0,0.12)] rounded-2xl px-5 py-3 text-xs whitespace-nowrap">
           Download successful!
         </div>
       </div>

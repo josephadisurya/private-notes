@@ -30,7 +30,7 @@ export default function Document() {
           }}
         />
       </Head>
-      <body className="bg-white dark:bg-neutral-900 beige:bg-[#f2e8d5] text-gray-900 dark:text-white font-satoshi font-[450] special-t tracking-wider">
+      <body className="bg-white dark:bg-neutral-900 beige:bg-[#f8efdb] text-gray-900 dark:text-white beige:text-[#463a25] font-satoshi font-[450] special-t tracking-wider">
         <Main />
         <NextScript />
       </body>

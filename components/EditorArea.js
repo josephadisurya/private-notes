@@ -64,7 +64,7 @@ export default function EditorArea({ title, setTitle, body, setBody, titleRef, b
     <>
       <div className="w-full max-w-3xl px-8">
         <textarea
-          className={`w-full mb-14 tracking-wide text-[17px] font-bold focus:outline-none focus:ring-0 ${fontClass} placeholder:text-neutral-400 dark:placeholder:text-neutral-500 beige:placeholder:text-[#8a7355] bg-transparent dark:bg-neutral-900`}
+          className={`w-full mb-14 tracking-wide text-[17px] font-bold focus:outline-none focus:ring-0 ${fontClass} placeholder:text-neutral-400 dark:placeholder:text-neutral-500 beige:placeholder:text-[#594e38] bg-transparent dark:bg-neutral-900`}
           placeholder="Title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
@@ -88,12 +88,12 @@ export default function EditorArea({ title, setTitle, body, setBody, titleRef, b
               e.preventDefault();
               document.execCommand("insertText", false, e.clipboardData.getData("text/plain"));
             }}
-            className={`w-full mb-28 text-[17px] tracking-wide font-medium focus:outline-none focus:ring-0 ${fontClass} bg-white dark:bg-neutral-900 beige:bg-[#f2e8d5] min-h-[60vh]`}
+            className={`w-full mb-28 text-[17px] tracking-wide font-medium focus:outline-none focus:ring-0 ${fontClass} bg-white dark:bg-neutral-900 beige:bg-[#f8efdb] min-h-[60vh]`}
             style={{ lineHeight: "32px", wordBreak: "break-word" }}
           />
           {isBodyEmpty && (
             <div
-              className={`absolute top-0 left-0 pointer-events-none select-none text-neutral-400 dark:text-neutral-500 beige:text-[#8a7355] text-[17px] tracking-wide font-medium ${fontClass}`}
+              className={`absolute top-0 left-0 pointer-events-none select-none text-neutral-400 dark:text-neutral-500 beige:text-[#594e38] text-[17px] tracking-wide font-medium ${fontClass}`}
               style={{ lineHeight: "32px" }}
             >
               <div className="">You can start typing here, you can also...</div>
@@ -110,12 +110,12 @@ export default function EditorArea({ title, setTitle, body, setBody, titleRef, b
         className="fixed z-20 special-t left-1/2 -translate-x-1/2"
         style={{ bottom: Math.max(144, keyboardHeight + 16), transition: "bottom 0.2s ease" }}
       >
-        <div className="bg-white dark:bg-neutral-800 beige:bg-[#f7f0dc] shadow-[0_4px_24px_rgba(0,0,0,0.12)] rounded-2xl p-1 flex flex-row gap-1">
+        <div className="bg-white dark:bg-neutral-800 beige:bg-[#fbf6e9] shadow-[0_4px_24px_rgba(0,0,0,0.12)] rounded-2xl p-1 flex flex-row gap-1">
           {buttons.map(({ label, command, activeKey, className }) => (
             <button
               key={command}
               onMouseDown={(e) => { e.preventDefault(); applyFormat(command); }}
-              className={`w-9 h-9 flex items-center justify-center rounded-xl text-sm transition-colors duration-200 ${className} ${activeFormats[activeKey] ? "bg-blue-100 dark:bg-blue-900/40 beige:bg-[#e6d3a8] text-blue-600 dark:text-blue-400 beige:text-[#5c4023]" : "hover:bg-neutral-100 dark:hover:bg-neutral-700 beige:hover:bg-[#ecdfc0]"}`}
+              className={`w-9 h-9 flex items-center justify-center rounded-xl text-sm transition-colors duration-200 ${className} ${activeFormats[activeKey] ? "bg-blue-100 dark:bg-blue-900/40 beige:bg-[#e8d3a0] text-blue-600 dark:text-blue-400 beige:text-[#463a25]" : "hover:bg-neutral-100 dark:hover:bg-neutral-700 beige:hover:bg-[#f0e2be]"}`}
             >
               {label}
             </button>

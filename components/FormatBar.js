@@ -21,7 +21,7 @@ export default function FormatBar({ show, toolbarPos, keyboardHeight, activeForm
           <button
             key={command}
             onMouseDown={(e) => { e.preventDefault(); onFormat(command); }}
-            className={`w-9 h-9 flex items-center justify-center rounded-xl text-sm transition-colors duration-200 ${className} ${activeFormats[activeKey] ? "bg-blue-100 dark:bg-blue-900/40 beige:bg-[#e6d3a8] text-blue-600 dark:text-blue-400 beige:text-[#5c4023]" : "hover:bg-neutral-100 dark:hover:bg-neutral-700 beige:hover:bg-[#ecdfc0]"}`}
+            className={`w-9 h-9 flex items-center justify-center rounded-xl text-sm transition-colors duration-200 ${className} ${activeFormats[activeKey] ? "bg-blue-100 dark:bg-blue-900/40 beige:bg-[#e8d3a0] text-blue-600 dark:text-blue-400 beige:text-[#463a25]" : "hover:bg-neutral-100 dark:hover:bg-neutral-700 beige:hover:bg-[#f0e2be]"}`}
           >
             {label}
           </button>
