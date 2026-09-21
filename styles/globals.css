@@ -19,29 +19,40 @@
     font-feature-settings: normal;
   }
 
+  /* Absolute /font/... paths (not the relative ../public/font/... style used
+     elsewhere in this file) — a relative url() gets resolved as a local
+     module by Next's CSS pipeline and re-emitted under a content-hashed
+     /_next/static/media/ path, which silently broke the <link rel=preload>
+     in _document.js (it was preloading a URL the browser never actually
+     requested). An absolute /-rooted path is served verbatim from public/
+     and left alone by webpack, so it's guaranteed to match the preload. */
   @font-face {
     font-family: "OpenDyslexic";
     font-weight: normal;
     font-style: normal;
-    src: url("../public/font/OpenDyslexic-Regular.woff") format("woff");
+    font-display: swap;
+    src: url("/font/OpenDyslexic-Regular.woff") format("woff");
   }
   @font-face {
     font-family: "OpenDyslexic";
     font-weight: bold;
     font-style: normal;
-    src: url("../public/font/OpenDyslexic-Bold.woff") format("woff");
+    font-display: swap;
+    src: url("/font/OpenDyslexic-Bold.woff") format("woff");
   }
   @font-face {
     font-family: "OpenDyslexic";
     font-weight: normal;
     font-style: italic;
-    src: url("../public/font/OpenDyslexic-Italic.woff") format("woff");
+    font-display: swap;
+    src: url("/font/OpenDyslexic-Italic.woff") format("woff");
   }
   @font-face {
     font-family: "OpenDyslexic";
     font-weight: bold;
     font-style: italic;
-    src: url("../public/font/OpenDyslexic-BoldItalic.woff") format("woff");
+    font-display: swap;
+    src: url("/font/OpenDyslexic-BoldItalic.woff") format("woff");
   }
 
   .dyslexic-t, .dyslexic-t * {

@@ -7,6 +7,14 @@ export default function Document() {
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet" />
+        {/* Preloaded (unlike Spectral, self-hosted fonts don't start
+            downloading until their @font-face is actually needed) so
+            picking OpenDyslexic doesn't flash the sans-serif fallback
+            while the file fetches. */}
+        <link rel="preload" href="/font/OpenDyslexic-Regular.woff" as="font" type="font/woff" crossOrigin="anonymous" />
+        <link rel="preload" href="/font/OpenDyslexic-Bold.woff" as="font" type="font/woff" crossOrigin="anonymous" />
+        <link rel="preload" href="/font/OpenDyslexic-Italic.woff" as="font" type="font/woff" crossOrigin="anonymous" />
+        <link rel="preload" href="/font/OpenDyslexic-BoldItalic.woff" as="font" type="font/woff" crossOrigin="anonymous" />
         <link rel="manifest" href="/site.webmanifest" />
         <meta name="theme-color" content="#ffffff" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
