@@ -134,7 +134,7 @@ export default function EditorHeader({
           onClick={() => setIsDownloadOpen((prev) => !prev)}
           className="text-neutral-400 beige:text-[#594e38] hover:text-black dark:hover:text-white beige:hover:text-[#463a25] w-11 h-11 lg:w-[30px] lg:h-[30px] flex items-center justify-center transform-all duration-500"
         >
-          <span className="material-icons" style={{ fontSize: 18 }}>download</span>
+          <span className="material-symbols-rounded" style={{ fontSize: 18 }}>download</span>
         </button>
         <div className="text-xs absolute z-20 mt-10 dark:text-white text-black beige:text-[#463a25] invisible lg:group-hover:visible">Download</div>
 
@@ -201,7 +201,7 @@ export default function EditorHeader({
           onClick={openClearModal}
           className="text-neutral-400 beige:text-[#594e38] hover:text-black dark:hover:text-white beige:hover:text-[#463a25] w-11 h-11 lg:w-[30px] lg:h-[30px] flex items-center justify-center transform-all duration-500"
         >
-          <span className="material-icons" style={{ fontSize: 18 }}>delete</span>
+          <span className="material-symbols-rounded" style={{ fontSize: 18 }}>backspace</span>
         </button>
         <div className="text-xs absolute z-20 mt-10 dark:text-white text-black beige:text-[#463a25] invisible lg:group-hover:visible">Clear</div>
       </div>
@@ -212,7 +212,7 @@ export default function EditorHeader({
           onClick={openInfoModal}
           className="text-neutral-400 beige:text-[#594e38] hover:text-black dark:hover:text-white beige:hover:text-[#463a25] w-11 h-11 lg:w-[30px] lg:h-[30px] flex items-center justify-center transform-all duration-500"
         >
-          <span className="material-icons" style={{ fontSize: 18 }}>info</span>
+          <span className="material-symbols-outlined" style={{ fontSize: 18 }}>info</span>
         </button>
         <div className="text-xs absolute z-20 mt-10 dark:text-white text-black beige:text-[#463a25] invisible lg:group-hover:visible">Info</div>
       </div>
