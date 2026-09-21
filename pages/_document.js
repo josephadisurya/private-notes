@@ -13,8 +13,16 @@ export default function Document() {
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="Writer" />
         <link rel="apple-touch-icon" href="/icon-192.png" />
+        {/* Applies the saved/OS-default theme before first paint, so there's
+            no flash of the wrong theme while React hydrates. Keep this in
+            sync with lib/theme.js's getInitialTheme(). */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem("app-writer-theme");if(t!=="light"&&t!=="dark"&&t!=="beige"){t=window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";}var r=document.documentElement;if(t==="dark")r.classList.add("dark");if(t==="beige")r.classList.add("beige");}catch(e){}})();`,
+          }}
+        />
       </Head>
-      <body className="bg-white dark:bg-neutral-900 text-gray-900 dark:text-white font-satoshi font-[450] special-t tracking-wider">
+      <body className="bg-white dark:bg-neutral-900 beige:bg-[#f2e8d5] text-gray-900 dark:text-white font-satoshi font-[450] special-t tracking-wider">
         <Main />
         <NextScript />
       </body>

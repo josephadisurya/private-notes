@@ -3,9 +3,9 @@ export default function InfoModal({ isInfoOpen, closeInfoModal }) {
 
   return (
     <div className="fixed inset-0 flex flex-col items-center z-30 max-w-full">
-      <div className="bg-white dark:bg-neutral-800 p-5 w-full h-full flex flex-col overflow-y-auto relative">
+      <div className="bg-white dark:bg-neutral-800 beige:bg-[#f7f0dc] p-5 w-full h-full flex flex-col overflow-y-auto relative">
         <div className="w-full text-right justify-end flex sticky top-0">
-          <div onClick={closeInfoModal} className="w-fit cursor-pointer transform-all duration-300 bg-white dark:bg-neutral-800 pl-2 hover:text-neutral-400">
+          <div onClick={closeInfoModal} className="w-fit cursor-pointer transform-all duration-300 bg-white dark:bg-neutral-800 beige:bg-[#f7f0dc] pl-2 hover:text-neutral-400">
             CLOSE
           </div>
         </div>

@@ -88,7 +88,7 @@ export default function EditorArea({ title, setTitle, body, setBody, titleRef, b
     <>
       <div className="w-full max-w-3xl px-8">
         <textarea
-          className={`w-full mb-14 tracking-wide text-[17px] font-bold focus:outline-none focus:ring-0 ${fontClass} placeholder:text-neutral-400 dark:placeholder:text-neutral-500 dark:bg-neutral-900`}
+          className={`w-full mb-14 tracking-wide text-[17px] font-bold focus:outline-none focus:ring-0 ${fontClass} placeholder:text-neutral-400 dark:placeholder:text-neutral-500 bg-transparent dark:bg-neutral-900`}
           placeholder="Title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
@@ -112,7 +112,7 @@ export default function EditorArea({ title, setTitle, body, setBody, titleRef, b
               e.preventDefault();
               document.execCommand("insertText", false, e.clipboardData.getData("text/plain"));
             }}
-            className={`w-full mb-28 text-[17px] tracking-wide font-medium focus:outline-none focus:ring-0 ${fontClass} bg-white dark:bg-neutral-900 min-h-[60vh]`}
+            className={`w-full mb-28 text-[17px] tracking-wide font-medium focus:outline-none focus:ring-0 ${fontClass} bg-white dark:bg-neutral-900 beige:bg-[#f2e8d5] min-h-[60vh]`}
             style={{ lineHeight: "32px", wordBreak: "break-word" }}
           />
           {isBodyEmpty && (
@@ -137,7 +137,7 @@ export default function EditorArea({ title, setTitle, body, setBody, titleRef, b
           : { bottom: Math.max(144, keyboardHeight + 16), transition: "bottom 0.2s ease" }
         }
       >
-        <div className="bg-white dark:bg-neutral-800 shadow-[0_4px_24px_rgba(0,0,0,0.12)] rounded-2xl p-1 flex flex-row gap-1">
+        <div className="bg-white dark:bg-neutral-800 beige:bg-[#f7f0dc] shadow-[0_4px_24px_rgba(0,0,0,0.12)] rounded-2xl p-1 flex flex-row gap-1">
           {buttons.map(({ label, command, activeKey, className }) => (
             <button
               key={command}

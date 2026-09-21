@@ -7,6 +7,7 @@ import EditorHeader from "@/components/EditorHeader";
 import EditorFooter from "@/components/EditorFooter";
 import ClearModal from "@/components/ClearModal";
 import InfoModal from "@/components/InfoModal";
+import { getInitialTheme, applyTheme, saveTheme } from "@/lib/theme";
 
 export default function Writer() {
   const [title, setTitle] = useState("");
@@ -19,6 +20,7 @@ export default function Writer() {
   const [showToast, setShowToast] = useState(false);
   const [keyboardHeight, setKeyboardHeight] = useState(0);
   const [font, setFont] = useState("sans");
+  const [theme, setTheme] = useState("light");
 
   const titleRef = useRef(null);
   const bodyRef = useRef(null);
@@ -45,6 +47,25 @@ export default function Writer() {
       if (titleRef.current) adjustTextareaHeight(titleRef.current);
     });
   }, []);
+
+  // Sync React state with whatever the flash-prevention inline script in
+  // _document.js already applied to <html> before hydration.
+  useEffect(() => {
+    setTheme(getInitialTheme());
+  }, []);
+
+  const changeTheme = (next) => {
+    setTheme(next);
+    applyTheme(next);
+    saveTheme(next);
+  };
+
+  // Keep the mobile browser-chrome tint matching the active theme
+  useEffect(() => {
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (!meta) return;
+    meta.setAttribute("content", theme === "dark" ? "#171717" : theme === "beige" ? "#f2e8d5" : "#ffffff");
+  }, [theme]);
 
   // Set footer timestamp on first keystroke, only if not already set
   useEffect(() => {
@@ -417,11 +438,13 @@ export default function Writer() {
           openInfoModal={() => setIsInfoOpen(true)}
           font={font}
           setFont={setFont}
+          theme={theme}
+          changeTheme={changeTheme}
         />
       </div>
 
       <div className={`fixed bottom-24 left-1/2 -translate-x-1/2 z-40 transition-opacity duration-500 ${showToast ? "opacity-100" : "opacity-0 pointer-events-none"}`}>
-        <div className="bg-white dark:bg-neutral-800 shadow-[0_4px_24px_rgba(0,0,0,0.12)] rounded-2xl px-5 py-3 text-xs whitespace-nowrap">
+        <div className="bg-white dark:bg-neutral-800 beige:bg-[#f7f0dc] shadow-[0_4px_24px_rgba(0,0,0,0.12)] rounded-2xl px-5 py-3 text-xs whitespace-nowrap">
           Download successful!
         </div>
       </div>
