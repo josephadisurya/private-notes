@@ -19,3 +19,10 @@
     font-feature-settings: normal;
   }
 
+  /* Native text-selection highlight — browsers default to blue, which
+     clashes with the beige/brown palette. */
+  .beige ::selection {
+    background: #e6d3a8;
+    color: #1a1a1a;
+  }
+

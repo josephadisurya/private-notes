@@ -70,14 +70,14 @@ export default function EditorHeader({
           <div className="fixed top-16 right-5 w-[260px] lg:absolute lg:top-10 lg:right-0 bg-white dark:bg-neutral-800 beige:bg-[#f7f0dc] shadow-[0_4px_24px_rgba(0,0,0,0.12)] rounded-2xl z-30 p-3 flex flex-col gap-1 special-t">
             <button
               onClick={() => { setFont("sans"); setIsFontOpen(false); }}
-              className={`px-4 py-3 text-left flex items-center justify-between w-full text-base rounded-xl transition-colors duration-200 ${font === "sans" ? "bg-blue-100 dark:bg-blue-900/40 beige:bg-[#e6d3a8] text-blue-600 dark:text-blue-400 beige:text-[#5c4023]" : "hover:bg-neutral-100 dark:hover:bg-neutral-700"}`}
+              className={`px-4 py-3 text-left flex items-center justify-between w-full text-base rounded-xl transition-colors duration-200 ${font === "sans" ? "bg-blue-100 dark:bg-blue-900/40 beige:bg-[#e6d3a8] text-blue-600 dark:text-blue-400 beige:text-[#5c4023]" : "hover:bg-neutral-100 dark:hover:bg-neutral-700 beige:hover:bg-[#ecdfc0]"}`}
             >
               <span>Sans Serif</span>
               <span className="text-neutral-400 beige:text-[#8a7355]" style={{ fontFamily: '"Satoshi", sans-serif' }}>Aa</span>
             </button>
             <button
               onClick={() => { setFont("serif"); setIsFontOpen(false); }}
-              className={`px-4 py-3 text-left flex items-center justify-between w-full text-base rounded-xl transition-colors duration-200 ${font === "serif" ? "bg-blue-100 dark:bg-blue-900/40 beige:bg-[#e6d3a8] text-blue-600 dark:text-blue-400 beige:text-[#5c4023]" : "hover:bg-neutral-100 dark:hover:bg-neutral-700"}`}
+              className={`px-4 py-3 text-left flex items-center justify-between w-full text-base rounded-xl transition-colors duration-200 ${font === "serif" ? "bg-blue-100 dark:bg-blue-900/40 beige:bg-[#e6d3a8] text-blue-600 dark:text-blue-400 beige:text-[#5c4023]" : "hover:bg-neutral-100 dark:hover:bg-neutral-700 beige:hover:bg-[#ecdfc0]"}`}
             >
               <span>Serif</span>
               <span className="text-neutral-400 beige:text-[#8a7355]" style={{ fontFamily: '"EB Garamond", Georgia, serif' }}>Aa</span>
@@ -105,7 +105,7 @@ export default function EditorHeader({
               <button
                 key={value}
                 onClick={() => { changeTheme(value); setIsThemeOpen(false); }}
-                className={`px-4 py-3 text-left flex items-center justify-between w-full text-base rounded-xl transition-colors duration-200 ${theme === value ? "bg-blue-100 dark:bg-blue-900/40 beige:bg-[#e6d3a8] text-blue-600 dark:text-blue-400 beige:text-[#5c4023]" : "hover:bg-neutral-100 dark:hover:bg-neutral-700"}`}
+                className={`px-4 py-3 text-left flex items-center justify-between w-full text-base rounded-xl transition-colors duration-200 ${theme === value ? "bg-blue-100 dark:bg-blue-900/40 beige:bg-[#e6d3a8] text-blue-600 dark:text-blue-400 beige:text-[#5c4023]" : "hover:bg-neutral-100 dark:hover:bg-neutral-700 beige:hover:bg-[#ecdfc0]"}`}
               >
                 <span>{label}</span>
                 <span className={`w-5 h-5 rounded-full ${swatchClass}`} />
@@ -119,7 +119,7 @@ export default function EditorHeader({
       <div ref={downloadRef} className="relative flex justify-center group">
         <button
           onClick={() => setIsDownloadOpen((prev) => !prev)}
-          className="fill-neutral-400 hover:fill-black dark:hover:fill-white w-[30px] transform-all duration-500"
+          className="fill-neutral-400 beige:fill-[#8a7355] hover:fill-black dark:hover:fill-white w-[30px] transform-all duration-500"
         >
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
             <path d="M480-328.46 309.23-499.23l42.16-43.38L450-444v-336h60v336l98.61-98.61 42.16 43.38L480-328.46ZM252.31-180Q222-180 201-201q-21-21-21-51.31v-108.46h60v108.46q0 4.62 3.85 8.46 3.84 3.85 8.46 3.85h455.38q4.62 0 8.46-3.85 3.85-3.84 3.85-8.46v-108.46h60v108.46Q780-222 759-201q-21 21-51.31 21H252.31Z" />
@@ -131,7 +131,7 @@ export default function EditorHeader({
           <div className="fixed top-16 right-5 w-[260px] lg:absolute lg:top-10 lg:right-0 bg-white dark:bg-neutral-800 beige:bg-[#f7f0dc] shadow-[0_4px_24px_rgba(0,0,0,0.12)] rounded-2xl z-30 p-3 flex flex-col gap-1 special-t">
             <button
               onClick={() => { downloadTxtFile(); setIsDownloadOpen(false); }}
-              className="px-4 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-700 text-left flex text-base rounded-xl transition-colors duration-200"
+              className="px-4 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-700 beige:hover:bg-[#ecdfc0] text-left flex text-base rounded-xl transition-colors duration-200"
             >
               <div className="flex flex-row items-center justify-between w-full">
                 <div>Text</div>
@@ -140,7 +140,7 @@ export default function EditorHeader({
             </button>
             <button
               onClick={() => { downloadMdFile(); setIsDownloadOpen(false); }}
-              className="px-4 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-700 text-left flex text-base rounded-xl transition-colors duration-200"
+              className="px-4 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-700 beige:hover:bg-[#ecdfc0] text-left flex text-base rounded-xl transition-colors duration-200"
             >
               <div className="flex flex-row items-center justify-between w-full">
                 <div>Markdown</div>
@@ -149,7 +149,7 @@ export default function EditorHeader({
             </button>
             <button
               onClick={() => setIsPdfThemeStep(true)}
-              className="px-4 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-700 text-left flex text-base rounded-xl transition-colors duration-200"
+              className="px-4 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-700 beige:hover:bg-[#ecdfc0] text-left flex text-base rounded-xl transition-colors duration-200"
             >
               <div className="flex flex-row items-center justify-between w-full">
                 <div>PDF</div>
@@ -168,7 +168,7 @@ export default function EditorHeader({
               <button
                 key={value}
                 onClick={() => setPdfExportTheme(value)}
-                className={`px-4 py-3 text-left flex items-center justify-between w-full text-base rounded-xl transition-colors duration-200 ${pdfExportTheme === value ? "bg-blue-100 dark:bg-blue-900/40 beige:bg-[#e6d3a8] text-blue-600 dark:text-blue-400 beige:text-[#5c4023]" : "hover:bg-neutral-100 dark:hover:bg-neutral-700"}`}
+                className={`px-4 py-3 text-left flex items-center justify-between w-full text-base rounded-xl transition-colors duration-200 ${pdfExportTheme === value ? "bg-blue-100 dark:bg-blue-900/40 beige:bg-[#e6d3a8] text-blue-600 dark:text-blue-400 beige:text-[#5c4023]" : "hover:bg-neutral-100 dark:hover:bg-neutral-700 beige:hover:bg-[#ecdfc0]"}`}
               >
                 <span>{label}</span>
                 <span className={`w-5 h-5 rounded-full ${swatchClass}`} />
@@ -188,7 +188,7 @@ export default function EditorHeader({
       <div className="flex justify-center group">
         <button
           onClick={openClearModal}
-          className="fill-neutral-400 hover:fill-black dark:hover:fill-white w-[30px] transform-all duration-500"
+          className="fill-neutral-400 beige:fill-[#8a7355] hover:fill-black dark:hover:fill-white w-[30px] transform-all duration-500"
         >
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"><path d="m449.08-333.85 104-104 104 104L699.23-376l-104-104 104-104-42.15-42.15-104 104-104-104L406.92-584l104 104-104 104 42.16 42.15ZM363.46-180q-17.17 0-32.54-7.58-15.36-7.58-25.3-20.96L100-480l205.62-271.46q9.94-13.38 25.3-20.96 15.37-7.58 32.54-7.58h424.23q29.83 0 51.07 21.24Q860-737.52 860-707.69v455.38q0 29.83-21.24 51.07Q817.52-180 787.69-180H363.46ZM175-480l178.46 235.38q1.92 2.31 4.42 3.47 2.5 1.15 5.58 1.15h424.23q5.39 0 8.85-3.46t3.46-8.85v-455.38q0-5.39-3.46-8.85t-8.85-3.46H363.46q-3.08 0-5.58 1.15-2.5 1.16-4.42 3.47L175-480Zm400.38 0Z" /></svg>
         </button>
@@ -199,7 +199,7 @@ export default function EditorHeader({
       <div className="flex justify-center group">
         <button
           onClick={openInfoModal}
-          className="fill-neutral-400 hover:fill-black dark:hover:fill-white w-[30px] transform-all duration-500"
+          className="fill-neutral-400 beige:fill-[#8a7355] hover:fill-black dark:hover:fill-white w-[30px] transform-all duration-500"
         >
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"><path d="M450-290h60v-230h-60v230Zm30-298.46q13.73 0 23.02-9.29t9.29-23.02q0-13.73-9.29-23.02-9.29-9.28-23.02-9.28t-23.02 9.28q-9.29 9.29-9.29 23.02t9.29 23.02q9.29 9.29 23.02 9.29Zm.07 488.46q-78.84 0-148.21-29.92t-120.68-81.21q-51.31-51.29-81.25-120.63Q100-401.1 100-479.93q0-78.84 29.92-148.21t81.21-120.68q51.29-51.31 120.63-81.25Q401.1-860 479.93-860q78.84 0 148.21 29.92t120.68 81.21q51.31 51.29 81.25 120.63Q860-558.9 860-480.07q0 78.84-29.92 148.21t-81.21 120.68q-51.29 51.31-120.63 81.25Q558.9-100 480.07-100Zm-.07-60q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z" /></svg>
         </button>

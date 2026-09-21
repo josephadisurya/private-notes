@@ -14,7 +14,7 @@ export default function ClearModal({ isModalOpen, clearContent, cancelClear }) {
           </button>
           <button
             onClick={cancelClear}
-            className="text-black dark:text-white px-4 py-2 hover:bg-neutral-200 dark:hover:bg-neutral-700 border-[1px] border-neutral-200 dark:border-neutral-600 rounded-md duration-500 transform-all w-full text-sm"
+            className="text-black dark:text-white px-4 py-2 hover:bg-neutral-200 dark:hover:bg-neutral-700 beige:hover:bg-[#ecdfc0] border-[1px] border-neutral-200 dark:border-neutral-600 beige:border-[#d9c48f] rounded-md duration-500 transform-all w-full text-sm"
           >
             Cancel
           </button>

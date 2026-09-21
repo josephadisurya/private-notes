@@ -107,7 +107,7 @@ export default function EditorArea({ title, setTitle, body, setBody, titleRef, b
       </div>
 
       <div
-        className="fixed z-50 special-t left-1/2 -translate-x-1/2"
+        className="fixed z-20 special-t left-1/2 -translate-x-1/2"
         style={{ bottom: Math.max(144, keyboardHeight + 16), transition: "bottom 0.2s ease" }}
       >
         <div className="bg-white dark:bg-neutral-800 beige:bg-[#f7f0dc] shadow-[0_4px_24px_rgba(0,0,0,0.12)] rounded-2xl p-1 flex flex-row gap-1">
@@ -115,7 +115,7 @@ export default function EditorArea({ title, setTitle, body, setBody, titleRef, b
             <button
               key={command}
               onMouseDown={(e) => { e.preventDefault(); applyFormat(command); }}
-              className={`w-9 h-9 flex items-center justify-center rounded-xl text-sm transition-colors duration-200 ${className} ${activeFormats[activeKey] ? "bg-blue-100 dark:bg-blue-900/40 beige:bg-[#e6d3a8] text-blue-600 dark:text-blue-400 beige:text-[#5c4023]" : "hover:bg-neutral-100 dark:hover:bg-neutral-700"}`}
+              className={`w-9 h-9 flex items-center justify-center rounded-xl text-sm transition-colors duration-200 ${className} ${activeFormats[activeKey] ? "bg-blue-100 dark:bg-blue-900/40 beige:bg-[#e6d3a8] text-blue-600 dark:text-blue-400 beige:text-[#5c4023]" : "hover:bg-neutral-100 dark:hover:bg-neutral-700 beige:hover:bg-[#ecdfc0]"}`}
             >
               {label}
             </button>
