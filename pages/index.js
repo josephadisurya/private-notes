@@ -212,11 +212,30 @@ export default function Writer() {
     triggerToast();
   };
 
-  const downloadPdfFile = () => {
+  const downloadPdfFile = async () => {
     const hasTitle = title.trim().length > 0;
     const fileTitle = title.trim() || getDefaultTitle();
-    const pdfFont = font === "serif" ? "Times" : "Helvetica";
     const doc = new jsPDF({ unit: "mm", format: "a4" });
+
+    // Serif uses the same EB Garamond family as the on-screen editor (.serif-t
+    // in globals.css) instead of jsPDF's built-in Times, so the PDF actually
+    // matches what you see while writing. Dynamically imported since the font
+    // data is ~200KB base64 and PDF export is a rare action, not worth adding
+    // to every page load.
+    let pdfFont = "Helvetica";
+    if (font === "serif") {
+      const { ebGaramondRegular, ebGaramondBold, ebGaramondItalic, ebGaramondBoldItalic } = await import("@/lib/ebGaramondFonts");
+      doc.addFileToVFS("EBGaramond-Regular.ttf", ebGaramondRegular);
+      doc.addFont("EBGaramond-Regular.ttf", "EBGaramond", "normal");
+      doc.addFileToVFS("EBGaramond-Bold.ttf", ebGaramondBold);
+      doc.addFont("EBGaramond-Bold.ttf", "EBGaramond", "bold");
+      doc.addFileToVFS("EBGaramond-Italic.ttf", ebGaramondItalic);
+      doc.addFont("EBGaramond-Italic.ttf", "EBGaramond", "italic");
+      doc.addFileToVFS("EBGaramond-BoldItalic.ttf", ebGaramondBoldItalic);
+      doc.addFont("EBGaramond-BoldItalic.ttf", "EBGaramond", "bolditalic");
+      pdfFont = "EBGaramond";
+    }
+
     const pageWidth = doc.internal.pageSize.getWidth();
     const pageHeight = doc.internal.pageSize.getHeight();
     const margin = 20;
