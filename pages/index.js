@@ -16,9 +16,11 @@ export default function Writer() {
   const [isDownloadOpen, setIsDownloadOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isInfoOpen, setIsInfoOpen] = useState(false);
-  const [iconsVisible, setIconsVisible] = useState(true);
+  // Auto-hide-on-inactivity was removed per feedback; kept as a constant
+  // (rather than deleting the prop everywhere) so header/footer opacity
+  // logic downstream doesn't need touching.
+  const iconsVisible = true;
   const [showToast, setShowToast] = useState(false);
-  const [keyboardHeight, setKeyboardHeight] = useState(0);
   const [font, setFont] = useState("sans");
   const [theme, setTheme] = useState("light");
 
@@ -27,7 +29,6 @@ export default function Writer() {
   const downloadRef = useRef(null);
   const hasMounted = useRef(false);
   const toastTimeoutRef = useRef(null);
-  const timeoutIdRef = useRef(null);
 
   const adjustTextareaHeight = (textarea) => {
     if (!textarea || !(textarea instanceof HTMLElement)) return;
@@ -105,52 +106,11 @@ export default function Writer() {
     localStorage.setItem("footer", footer);
   }, [title, body, footer]);
 
-  // Hide UI after 5s of no mouse movement
-  const handleMouseMove = () => {
-    setIconsVisible(true);
-    clearTimeout(timeoutIdRef.current);
-    timeoutIdRef.current = setTimeout(() => setIconsVisible(false), 5000);
-  };
-
-  useEffect(() => {
-    document.addEventListener("mousemove", handleMouseMove);
-    return () => {
-      document.removeEventListener("mousemove", handleMouseMove);
-      clearTimeout(timeoutIdRef.current);
-    };
-  }, []);
-
-  // Track keyboard height via Visual Viewport API
-  useEffect(() => {
-    if (typeof window === "undefined" || !window.visualViewport) return;
-    const handler = () => {
-      const h = window.innerHeight - window.visualViewport.offsetTop - window.visualViewport.height;
-      setKeyboardHeight(Math.max(0, h));
-    };
-    window.visualViewport.addEventListener("resize", handler);
-    window.visualViewport.addEventListener("scroll", handler);
-    return () => {
-      window.visualViewport.removeEventListener("resize", handler);
-      window.visualViewport.removeEventListener("scroll", handler);
-    };
-  }, []);
-
-  // Measure the footer's real height instead of guessing a fixed value for
-  // the toolbar's default bottom offset — the footer's timestamp/hint text
-  // wraps to a different number of lines depending on device width and
-  // content, so a hardcoded offset either overlaps it (too small) or leaves
-  // a big gap below the toolbar (too large, on devices where it wraps less
-  // than assumed).
-  const footerRef = useRef(null);
-  const [footerHeight, setFooterHeight] = useState(96);
-  useEffect(() => {
-    if (!footerRef.current || typeof ResizeObserver === "undefined") return;
-    const observer = new ResizeObserver((entries) => {
-      setFooterHeight(entries[0].contentRect.height);
-    });
-    observer.observe(footerRef.current);
-    return () => observer.disconnect();
-  }, []);
+  // The toolbar now renders (via a portal) directly into a slot inside
+  // EditorFooter's own row, instead of floating separately above it — so
+  // it's always anchored to the bottom as one visual block, no more
+  // measuring the footer to compute a matching offset.
+  const [toolbarSlot, setToolbarSlot] = useState(null);
 
   // Close download dropdown on outside click
   useEffect(() => {
@@ -462,8 +422,7 @@ export default function Writer() {
           titleRef={titleRef}
           bodyRef={bodyRef}
           adjustTextareaHeight={adjustTextareaHeight}
-          keyboardHeight={keyboardHeight}
-          footerHeight={footerHeight}
+          toolbarSlot={toolbarSlot}
           font={font}
         />
 
@@ -472,7 +431,7 @@ export default function Writer() {
           footer={footer}
           title={title}
           body={body}
-          containerRef={footerRef}
+          toolbarSlotRef={setToolbarSlot}
         />
 
         <EditorHeader

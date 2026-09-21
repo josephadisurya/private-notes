@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 
-export default function EditorArea({ title, setTitle, body, setBody, titleRef, bodyRef, adjustTextareaHeight, keyboardHeight, footerHeight, font }) {
+export default function EditorArea({ title, setTitle, body, setBody, titleRef, bodyRef, adjustTextareaHeight, toolbarSlot, font }) {
   const [activeFormats, setActiveFormats] = useState({ bold: false, italic: false, underline: false, strikeThrough: false });
   const [isBodyEmpty, setIsBodyEmpty] = useState(true);
   const loadedRef = useRef(false);
@@ -204,11 +205,8 @@ export default function EditorArea({ title, setTitle, body, setBody, titleRef, b
         </div>
       </div>
 
-      <div
-        className="fixed z-20 special-t left-1/2 -translate-x-1/2"
-        style={{ bottom: Math.max(footerHeight + 8, keyboardHeight + 16), transition: "bottom 0.2s ease" }}
-      >
-        <div className="bg-white dark:bg-neutral-800 beige:bg-[#fbf6e9] shadow-[0_4px_24px_rgba(0,0,0,0.12)] rounded-2xl p-1 flex flex-row gap-1">
+      {toolbarSlot && createPortal(
+        <div className="special-t bg-white dark:bg-neutral-800 beige:bg-[#fbf6e9] shadow-[0_4px_24px_rgba(0,0,0,0.12)] rounded-2xl p-1 flex flex-row gap-1">
           {buttons.map(({ label, command, activeKey, className }) => (
             <button
               key={command}
@@ -218,8 +216,9 @@ export default function EditorArea({ title, setTitle, body, setBody, titleRef, b
               {label}
             </button>
           ))}
-        </div>
-      </div>
+        </div>,
+        toolbarSlot
+      )}
     </>
   );
 }
