@@ -4,11 +4,11 @@ function countWords(title, body) {
   return words.length === 1 && words[0] === "" ? 0 : words.length;
 }
 
-export default function EditorFooter({ iconsVisible, footer, title, body }) {
+export default function EditorFooter({ iconsVisible, footer, title, body, containerRef }) {
   const words = countWords(title, body);
 
   return (
-    <div className={`fixed bottom-0 w-full pointer-events-none transition-opacity duration-500 ${iconsVisible ? "opacity-100" : "opacity-0"}`}>
+    <div ref={containerRef} className={`fixed bottom-0 w-full pointer-events-none transition-opacity duration-500 ${iconsVisible ? "opacity-100" : "opacity-0"}`}>
       {/* gradient fade */}
       <div className="w-full h-20 bg-gradient-to-t from-white dark:from-neutral-900 beige:from-[#f8efdb] to-transparent" />
       {/* solid background with text */}

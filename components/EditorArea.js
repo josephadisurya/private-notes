@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 
-export default function EditorArea({ title, setTitle, body, setBody, titleRef, bodyRef, adjustTextareaHeight, keyboardHeight, font }) {
+export default function EditorArea({ title, setTitle, body, setBody, titleRef, bodyRef, adjustTextareaHeight, keyboardHeight, footerHeight, font }) {
   const [activeFormats, setActiveFormats] = useState({ bold: false, italic: false, underline: false, strikeThrough: false });
   const [isBodyEmpty, setIsBodyEmpty] = useState(true);
   const loadedRef = useRef(false);
@@ -206,7 +206,7 @@ export default function EditorArea({ title, setTitle, body, setBody, titleRef, b
 
       <div
         className="fixed z-20 special-t left-1/2 -translate-x-1/2"
-        style={{ bottom: Math.max(144, keyboardHeight + 16), transition: "bottom 0.2s ease" }}
+        style={{ bottom: Math.max(footerHeight + 16, keyboardHeight + 16), transition: "bottom 0.2s ease" }}
       >
         <div className="bg-white dark:bg-neutral-800 beige:bg-[#fbf6e9] shadow-[0_4px_24px_rgba(0,0,0,0.12)] rounded-2xl p-1 flex flex-row gap-1">
           {buttons.map(({ label, command, activeKey, className }) => (

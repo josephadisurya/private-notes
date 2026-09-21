@@ -135,6 +135,23 @@ export default function Writer() {
     };
   }, []);
 
+  // Measure the footer's real height instead of guessing a fixed value for
+  // the toolbar's default bottom offset — the footer's timestamp/hint text
+  // wraps to a different number of lines depending on device width and
+  // content, so a hardcoded offset either overlaps it (too small) or leaves
+  // a big gap below the toolbar (too large, on devices where it wraps less
+  // than assumed).
+  const footerRef = useRef(null);
+  const [footerHeight, setFooterHeight] = useState(96);
+  useEffect(() => {
+    if (!footerRef.current || typeof ResizeObserver === "undefined") return;
+    const observer = new ResizeObserver((entries) => {
+      setFooterHeight(entries[0].contentRect.height);
+    });
+    observer.observe(footerRef.current);
+    return () => observer.disconnect();
+  }, []);
+
   // Close download dropdown on outside click
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -446,6 +463,7 @@ export default function Writer() {
           bodyRef={bodyRef}
           adjustTextareaHeight={adjustTextareaHeight}
           keyboardHeight={keyboardHeight}
+          footerHeight={footerHeight}
           font={font}
         />
 
@@ -454,6 +472,7 @@ export default function Writer() {
           footer={footer}
           title={title}
           body={body}
+          containerRef={footerRef}
         />
 
         <EditorHeader
