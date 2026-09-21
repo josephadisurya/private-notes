@@ -233,10 +233,20 @@ export default function Writer() {
     triggerToast();
   };
 
-  const downloadPdfFile = async () => {
+  // RGB triples matching each theme's actual on-screen colors (light bg
+  // #ffffff/black text, dark bg #171717 (neutral-900)/white text, beige bg
+  // #f2e8d5/black text — see the beige: overrides in the components).
+  const PDF_THEME_COLORS = {
+    light: { bg: [255, 255, 255], text: [0, 0, 0] },
+    dark: { bg: [23, 23, 23], text: [255, 255, 255] },
+    beige: { bg: [242, 232, 213], text: [0, 0, 0] },
+  };
+
+  const downloadPdfFile = async (pdfTheme = theme) => {
     const hasTitle = title.trim().length > 0;
     const fileTitle = title.trim() || getDefaultTitle();
     const doc = new jsPDF({ unit: "mm", format: "a4" });
+    const pdfColors = PDF_THEME_COLORS[pdfTheme] || PDF_THEME_COLORS.light;
 
     // Serif uses the same EB Garamond family as the on-screen editor (.serif-t
     // in globals.css) instead of jsPDF's built-in Times, so the PDF actually
@@ -264,9 +274,17 @@ export default function Writer() {
     const maxY = pageHeight - margin;
     let y = margin + 5;
 
+    const fillPageBackground = () => {
+      if (pdfTheme === "light") return; // jsPDF pages are already white by default
+      doc.setFillColor(...pdfColors.bg);
+      doc.rect(0, 0, pageWidth, pageHeight, "F");
+    };
+    fillPageBackground();
+
     if (hasTitle) {
       doc.setFont(pdfFont, "bold");
       doc.setFontSize(18);
+      doc.setTextColor(...pdfColors.text);
       doc.text(fileTitle, margin, y);
       y += 10;
     }
@@ -323,7 +341,7 @@ export default function Writer() {
     const newLine = () => {
       curX = margin;
       y += lineHeight;
-      if (y > maxY) { doc.addPage(); y = margin + 5; }
+      if (y > maxY) { doc.addPage(); fillPageBackground(); y = margin + 5; }
     };
 
     for (const seg of segments) {
@@ -338,7 +356,8 @@ export default function Writer() {
       else if (seg.bold) fontStyle = "bold";
       else if (seg.italic) fontStyle = "italic";
       doc.setFont(pdfFont, fontStyle);
-      doc.setTextColor(0);
+      doc.setTextColor(...pdfColors.text);
+      doc.setDrawColor(...pdfColors.text);
 
       for (const token of seg.text.split(/(\s+)/)) {
         if (!token) continue;
