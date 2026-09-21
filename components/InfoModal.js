@@ -5,7 +5,7 @@ export default function InfoModal({ isInfoOpen, closeInfoModal }) {
     <div className="fixed inset-0 flex flex-col items-center z-30 max-w-full">
       <div className="bg-white dark:bg-neutral-800 beige:bg-[#f7f0dc] p-5 w-full h-full flex flex-col overflow-y-auto relative">
         <div className="w-full text-right justify-end flex sticky top-0">
-          <div onClick={closeInfoModal} className="w-fit cursor-pointer transform-all duration-300 bg-white dark:bg-neutral-800 beige:bg-[#f7f0dc] pl-2 hover:text-neutral-400">
+          <div onClick={closeInfoModal} className="w-fit cursor-pointer transform-all duration-300 bg-white dark:bg-neutral-800 beige:bg-[#f7f0dc] pl-2 hover:text-neutral-400 beige:hover:text-[#8a7355]">
             CLOSE
           </div>
         </div>
@@ -29,15 +29,15 @@ export default function InfoModal({ isInfoOpen, closeInfoModal }) {
             <li>Add how to</li>
             <li>Styling texts</li>
             <li>Offline mode</li>
-            <li className="line-through text-neutral-400 dark:text-neutral-600">Download as .md and .pdf options</li>
-            <li className="line-through text-neutral-400 dark:text-neutral-600">Auto dark mode</li>
-            <li className="line-through text-neutral-400 dark:text-neutral-600">Add tooltips to buttons</li>
+            <li className="line-through text-neutral-400 dark:text-neutral-600 beige:text-[#8a7355]">Download as .md and .pdf options</li>
+            <li className="line-through text-neutral-400 dark:text-neutral-600 beige:text-[#8a7355]">Auto dark mode</li>
+            <li className="line-through text-neutral-400 dark:text-neutral-600 beige:text-[#8a7355]">Add tooltips to buttons</li>
           </ul>
 
           <div className="border-t-[1px] border-black mb-5 mt-14 dark:border-white">Upcoming bug fix</div>
           <ul className="list-disc pl-5">
-            <li className="line-through text-neutral-400 dark:text-neutral-600">Text area too low after refreshing</li>
-            <li className="line-through text-neutral-400 dark:text-neutral-600">Word count doesn&apos;t count title</li>
+            <li className="line-through text-neutral-400 dark:text-neutral-600 beige:text-[#8a7355]">Text area too low after refreshing</li>
+            <li className="line-through text-neutral-400 dark:text-neutral-600 beige:text-[#8a7355]">Word count doesn&apos;t count title</li>
           </ul>
 
           <div className="border-t-[1px] border-black mb-5 mt-14 dark:border-white">Colophon</div>

@@ -60,7 +60,7 @@ export default function EditorHeader({
       <div ref={fontRef} className="relative flex justify-center group">
         <button
           onClick={() => setIsFontOpen((prev) => !prev)}
-          className="text-neutral-400 hover:text-black dark:hover:text-white w-[30px] h-[30px] flex items-center justify-center transition-all duration-500 text-lg font-semibold"
+          className="text-neutral-400 beige:text-[#8a7355] hover:text-black dark:hover:text-white w-[30px] h-[30px] flex items-center justify-center transition-all duration-500 text-lg font-semibold"
         >
           Aa
         </button>
@@ -70,17 +70,17 @@ export default function EditorHeader({
           <div className="fixed top-16 right-5 w-[260px] lg:absolute lg:top-10 lg:right-0 bg-white dark:bg-neutral-800 beige:bg-[#f7f0dc] shadow-[0_4px_24px_rgba(0,0,0,0.12)] rounded-2xl z-30 p-3 flex flex-col gap-1 special-t">
             <button
               onClick={() => { setFont("sans"); setIsFontOpen(false); }}
-              className={`px-4 py-3 text-left flex items-center justify-between w-full text-base rounded-xl transition-colors duration-200 ${font === "sans" ? "bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400" : "hover:bg-neutral-100 dark:hover:bg-neutral-700"}`}
+              className={`px-4 py-3 text-left flex items-center justify-between w-full text-base rounded-xl transition-colors duration-200 ${font === "sans" ? "bg-blue-100 dark:bg-blue-900/40 beige:bg-[#e6d3a8] text-blue-600 dark:text-blue-400 beige:text-[#5c4023]" : "hover:bg-neutral-100 dark:hover:bg-neutral-700"}`}
             >
               <span>Sans Serif</span>
-              <span className="text-neutral-400" style={{ fontFamily: '"Satoshi", sans-serif' }}>Aa</span>
+              <span className="text-neutral-400 beige:text-[#8a7355]" style={{ fontFamily: '"Satoshi", sans-serif' }}>Aa</span>
             </button>
             <button
               onClick={() => { setFont("serif"); setIsFontOpen(false); }}
-              className={`px-4 py-3 text-left flex items-center justify-between w-full text-base rounded-xl transition-colors duration-200 ${font === "serif" ? "bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400" : "hover:bg-neutral-100 dark:hover:bg-neutral-700"}`}
+              className={`px-4 py-3 text-left flex items-center justify-between w-full text-base rounded-xl transition-colors duration-200 ${font === "serif" ? "bg-blue-100 dark:bg-blue-900/40 beige:bg-[#e6d3a8] text-blue-600 dark:text-blue-400 beige:text-[#5c4023]" : "hover:bg-neutral-100 dark:hover:bg-neutral-700"}`}
             >
               <span>Serif</span>
-              <span className="text-neutral-400" style={{ fontFamily: '"EB Garamond", Georgia, serif' }}>Aa</span>
+              <span className="text-neutral-400 beige:text-[#8a7355]" style={{ fontFamily: '"EB Garamond", Georgia, serif' }}>Aa</span>
             </button>
           </div>
         )}
@@ -90,7 +90,7 @@ export default function EditorHeader({
       <div ref={themeRef} className="relative flex justify-center group">
         <button
           onClick={() => setIsThemeOpen((prev) => !prev)}
-          className="text-neutral-400 hover:text-black dark:hover:text-white w-[30px] h-[30px] flex items-center justify-center transition-all duration-500"
+          className="text-neutral-400 beige:text-[#8a7355] hover:text-black dark:hover:text-white w-[30px] h-[30px] flex items-center justify-center transition-all duration-500"
         >
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2">
             <circle cx="12" cy="12" r="9" />
@@ -105,7 +105,7 @@ export default function EditorHeader({
               <button
                 key={value}
                 onClick={() => { changeTheme(value); setIsThemeOpen(false); }}
-                className={`px-4 py-3 text-left flex items-center justify-between w-full text-base rounded-xl transition-colors duration-200 ${theme === value ? "bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400" : "hover:bg-neutral-100 dark:hover:bg-neutral-700"}`}
+                className={`px-4 py-3 text-left flex items-center justify-between w-full text-base rounded-xl transition-colors duration-200 ${theme === value ? "bg-blue-100 dark:bg-blue-900/40 beige:bg-[#e6d3a8] text-blue-600 dark:text-blue-400 beige:text-[#5c4023]" : "hover:bg-neutral-100 dark:hover:bg-neutral-700"}`}
               >
                 <span>{label}</span>
                 <span className={`w-5 h-5 rounded-full ${swatchClass}`} />
@@ -135,7 +135,7 @@ export default function EditorHeader({
             >
               <div className="flex flex-row items-center justify-between w-full">
                 <div>Text</div>
-                <div className="text-neutral-400">.txt</div>
+                <div className="text-neutral-400 beige:text-[#8a7355]">.txt</div>
               </div>
             </button>
             <button
@@ -144,7 +144,7 @@ export default function EditorHeader({
             >
               <div className="flex flex-row items-center justify-between w-full">
                 <div>Markdown</div>
-                <div className="text-neutral-400">.md</div>
+                <div className="text-neutral-400 beige:text-[#8a7355]">.md</div>
               </div>
             </button>
             <button
@@ -153,7 +153,7 @@ export default function EditorHeader({
             >
               <div className="flex flex-row items-center justify-between w-full">
                 <div>PDF</div>
-                <div className="text-neutral-400">.pdf</div>
+                <div className="text-neutral-400 beige:text-[#8a7355]">.pdf</div>
               </div>
             </button>
           </div>
@@ -163,12 +163,12 @@ export default function EditorHeader({
             colors (pre-selected to the site's current theme) then confirm. */}
         {isDownloadOpen && isPdfThemeStep && (
           <div className="fixed top-16 right-5 w-[260px] lg:absolute lg:top-10 lg:right-0 bg-white dark:bg-neutral-800 beige:bg-[#f7f0dc] shadow-[0_4px_24px_rgba(0,0,0,0.12)] rounded-2xl z-30 p-3 flex flex-col gap-1 special-t">
-            <div className="px-4 pt-1 pb-2 text-xs text-neutral-400">PDF theme</div>
+            <div className="px-4 pt-1 pb-2 text-xs text-neutral-400 beige:text-[#8a7355]">PDF theme</div>
             {themeOptions.map(({ value, label, swatchClass }) => (
               <button
                 key={value}
                 onClick={() => setPdfExportTheme(value)}
-                className={`px-4 py-3 text-left flex items-center justify-between w-full text-base rounded-xl transition-colors duration-200 ${pdfExportTheme === value ? "bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400" : "hover:bg-neutral-100 dark:hover:bg-neutral-700"}`}
+                className={`px-4 py-3 text-left flex items-center justify-between w-full text-base rounded-xl transition-colors duration-200 ${pdfExportTheme === value ? "bg-blue-100 dark:bg-blue-900/40 beige:bg-[#e6d3a8] text-blue-600 dark:text-blue-400 beige:text-[#5c4023]" : "hover:bg-neutral-100 dark:hover:bg-neutral-700"}`}
               >
                 <span>{label}</span>
                 <span className={`w-5 h-5 rounded-full ${swatchClass}`} />
