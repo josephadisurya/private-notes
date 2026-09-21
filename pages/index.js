@@ -248,23 +248,23 @@ export default function Writer() {
     const doc = new jsPDF({ unit: "mm", format: "a4" });
     const pdfColors = PDF_THEME_COLORS[pdfTheme] || PDF_THEME_COLORS.light;
 
-    // Serif uses the same EB Garamond family as the on-screen editor (.serif-t
+    // Serif uses the same Spectral family as the on-screen editor (.serif-t
     // in globals.css) instead of jsPDF's built-in Times, so the PDF actually
     // matches what you see while writing. Dynamically imported since the font
-    // data is ~200KB base64 and PDF export is a rare action, not worth adding
+    // data is ~160KB base64 and PDF export is a rare action, not worth adding
     // to every page load.
     let pdfFont = "Helvetica";
     if (font === "serif") {
-      const { ebGaramondRegular, ebGaramondBold, ebGaramondItalic, ebGaramondBoldItalic } = await import("@/lib/ebGaramondFonts");
-      doc.addFileToVFS("EBGaramond-Regular.ttf", ebGaramondRegular);
-      doc.addFont("EBGaramond-Regular.ttf", "EBGaramond", "normal");
-      doc.addFileToVFS("EBGaramond-Bold.ttf", ebGaramondBold);
-      doc.addFont("EBGaramond-Bold.ttf", "EBGaramond", "bold");
-      doc.addFileToVFS("EBGaramond-Italic.ttf", ebGaramondItalic);
-      doc.addFont("EBGaramond-Italic.ttf", "EBGaramond", "italic");
-      doc.addFileToVFS("EBGaramond-BoldItalic.ttf", ebGaramondBoldItalic);
-      doc.addFont("EBGaramond-BoldItalic.ttf", "EBGaramond", "bolditalic");
-      pdfFont = "EBGaramond";
+      const { spectralRegular, spectralBold, spectralItalic, spectralBoldItalic } = await import("@/lib/spectralFonts");
+      doc.addFileToVFS("Spectral-Regular.ttf", spectralRegular);
+      doc.addFont("Spectral-Regular.ttf", "Spectral", "normal");
+      doc.addFileToVFS("Spectral-Bold.ttf", spectralBold);
+      doc.addFont("Spectral-Bold.ttf", "Spectral", "bold");
+      doc.addFileToVFS("Spectral-Italic.ttf", spectralItalic);
+      doc.addFont("Spectral-Italic.ttf", "Spectral", "italic");
+      doc.addFileToVFS("Spectral-BoldItalic.ttf", spectralBoldItalic);
+      doc.addFont("Spectral-BoldItalic.ttf", "Spectral", "bolditalic");
+      pdfFont = "Spectral";
     }
 
     const pageWidth = doc.internal.pageSize.getWidth();
