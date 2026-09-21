@@ -248,11 +248,11 @@ export default function Writer() {
     const doc = new jsPDF({ unit: "mm", format: "a4" });
     const pdfColors = PDF_THEME_COLORS[pdfTheme] || PDF_THEME_COLORS.light;
 
-    // Serif uses the same Spectral family as the on-screen editor (.serif-t
-    // in globals.css) instead of jsPDF's built-in Times, so the PDF actually
-    // matches what you see while writing. Dynamically imported since the font
-    // data is ~160KB base64 and PDF export is a rare action, not worth adding
-    // to every page load.
+    // Serif/OpenDyslexic use the same font families as the on-screen editor
+    // (.serif-t / .dyslexic-t in globals.css) instead of jsPDF's built-in
+    // fonts, so the PDF actually matches what you see while writing.
+    // Dynamically imported since the font data is ~160-170KB base64 and PDF
+    // export is a rare action, not worth adding to every page load.
     let pdfFont = "Helvetica";
     if (font === "serif") {
       const { spectralRegular, spectralBold, spectralItalic, spectralBoldItalic } = await import("@/lib/spectralFonts");
@@ -265,6 +265,17 @@ export default function Writer() {
       doc.addFileToVFS("Spectral-BoldItalic.ttf", spectralBoldItalic);
       doc.addFont("Spectral-BoldItalic.ttf", "Spectral", "bolditalic");
       pdfFont = "Spectral";
+    } else if (font === "dyslexic") {
+      const { openDyslexicRegular, openDyslexicBold, openDyslexicItalic, openDyslexicBoldItalic } = await import("@/lib/openDyslexicFonts");
+      doc.addFileToVFS("OpenDyslexic-Regular.ttf", openDyslexicRegular);
+      doc.addFont("OpenDyslexic-Regular.ttf", "OpenDyslexic", "normal");
+      doc.addFileToVFS("OpenDyslexic-Bold.ttf", openDyslexicBold);
+      doc.addFont("OpenDyslexic-Bold.ttf", "OpenDyslexic", "bold");
+      doc.addFileToVFS("OpenDyslexic-Italic.ttf", openDyslexicItalic);
+      doc.addFont("OpenDyslexic-Italic.ttf", "OpenDyslexic", "italic");
+      doc.addFileToVFS("OpenDyslexic-BoldItalic.ttf", openDyslexicBoldItalic);
+      doc.addFont("OpenDyslexic-BoldItalic.ttf", "OpenDyslexic", "bolditalic");
+      pdfFont = "OpenDyslexic";
     }
 
     const pageWidth = doc.internal.pageSize.getWidth();

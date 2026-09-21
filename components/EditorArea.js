@@ -58,7 +58,7 @@ export default function EditorArea({ title, setTitle, body, setBody, titleRef, b
     { label: "S", command: "strikeThrough", activeKey: "strikeThrough", className: "line-through" },
   ];
 
-  const fontClass = font === "serif" ? "serif-t" : "special-t";
+  const fontClass = font === "serif" ? "serif-t" : font === "dyslexic" ? "dyslexic-t" : "special-t";
 
   return (
     <>

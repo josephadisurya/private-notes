@@ -19,6 +19,36 @@
     font-feature-settings: normal;
   }
 
+  @font-face {
+    font-family: "OpenDyslexic";
+    font-weight: normal;
+    font-style: normal;
+    src: url("../public/font/OpenDyslexic-Regular.woff") format("woff");
+  }
+  @font-face {
+    font-family: "OpenDyslexic";
+    font-weight: bold;
+    font-style: normal;
+    src: url("../public/font/OpenDyslexic-Bold.woff") format("woff");
+  }
+  @font-face {
+    font-family: "OpenDyslexic";
+    font-weight: normal;
+    font-style: italic;
+    src: url("../public/font/OpenDyslexic-Italic.woff") format("woff");
+  }
+  @font-face {
+    font-family: "OpenDyslexic";
+    font-weight: bold;
+    font-style: italic;
+    src: url("../public/font/OpenDyslexic-BoldItalic.woff") format("woff");
+  }
+
+  .dyslexic-t, .dyslexic-t * {
+    font-family: "OpenDyslexic", sans-serif;
+    font-feature-settings: normal;
+  }
+
   /* Native text-selection highlight — browsers default to blue, which
      clashes with the beige/brown palette. */
   .beige ::selection {

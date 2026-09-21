@@ -82,6 +82,13 @@ export default function EditorHeader({
               <span>Serif</span>
               <span className="text-neutral-400 beige:text-[#8a7355]" style={{ fontFamily: '"Spectral", Georgia, serif' }}>Aa</span>
             </button>
+            <button
+              onClick={() => { setFont("dyslexic"); setIsFontOpen(false); }}
+              className={`px-4 py-3 text-left flex items-center justify-between w-full text-base rounded-xl transition-colors duration-200 ${font === "dyslexic" ? "bg-blue-100 dark:bg-blue-900/40 beige:bg-[#e6d3a8] text-blue-600 dark:text-blue-400 beige:text-[#5c4023]" : "hover:bg-neutral-100 dark:hover:bg-neutral-700 beige:hover:bg-[#ecdfc0]"}`}
+            >
+              <span>OpenDyslexic</span>
+              <span className="text-neutral-400 beige:text-[#8a7355]" style={{ fontFamily: '"OpenDyslexic", sans-serif' }}>Aa</span>
+            </button>
           </div>
         )}
       </div>
