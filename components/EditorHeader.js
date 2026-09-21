@@ -17,6 +17,12 @@ export default function EditorHeader({
 }) {
   const [isFontOpen, setIsFontOpen] = useState(false);
   const [isThemeOpen, setIsThemeOpen] = useState(false);
+  // The download dropdown's PDF option doesn't download immediately — it
+  // switches the same dropdown into a theme-pick step (pre-selected to the
+  // site's current theme) with a confirm button, so the PDF isn't tied to
+  // whatever theme you happen to be viewing the site in.
+  const [isPdfThemeStep, setIsPdfThemeStep] = useState(false);
+  const [pdfExportTheme, setPdfExportTheme] = useState(theme);
   const fontRef = useRef(null);
   const themeRef = useRef(null);
 
@@ -28,6 +34,18 @@ export default function EditorHeader({
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
   }, []);
+
+  // The download dropdown can close from outside this component (click
+  // outside, handled in pages/index.js) — reset back to the file-type list
+  // whenever that happens, so it doesn't reopen stuck on the PDF theme step.
+  useEffect(() => {
+    if (!isDownloadOpen) setIsPdfThemeStep(false);
+  }, [isDownloadOpen]);
+
+  // Pre-select the site's current theme each time the PDF step opens
+  useEffect(() => {
+    if (isPdfThemeStep) setPdfExportTheme(theme);
+  }, [isPdfThemeStep]);
 
   const themeOptions = [
     { value: "light", label: "Light", swatchClass: "bg-white border border-neutral-300" },
@@ -109,7 +127,7 @@ export default function EditorHeader({
         </button>
         <div className="text-xs absolute z-20 mt-10 dark:text-white text-black invisible lg:group-hover:visible">Download</div>
 
-        {isDownloadOpen && (
+        {isDownloadOpen && !isPdfThemeStep && (
           <div className="fixed top-16 right-5 w-[260px] lg:absolute lg:top-10 lg:right-0 bg-white dark:bg-neutral-800 beige:bg-[#f7f0dc] shadow-[0_4px_24px_rgba(0,0,0,0.12)] rounded-2xl z-30 p-3 flex flex-col gap-1 special-t">
             <button
               onClick={() => { downloadTxtFile(); setIsDownloadOpen(false); }}
@@ -130,13 +148,37 @@ export default function EditorHeader({
               </div>
             </button>
             <button
-              onClick={() => { downloadPdfFile(); setIsDownloadOpen(false); }}
+              onClick={() => setIsPdfThemeStep(true)}
               className="px-4 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-700 text-left flex text-base rounded-xl transition-colors duration-200"
             >
               <div className="flex flex-row items-center justify-between w-full">
                 <div>PDF</div>
                 <div className="text-neutral-400">.pdf</div>
               </div>
+            </button>
+          </div>
+        )}
+
+        {/* PDF's theme step — same dropdown, swapped content: pick the PDF's
+            colors (pre-selected to the site's current theme) then confirm. */}
+        {isDownloadOpen && isPdfThemeStep && (
+          <div className="fixed top-16 right-5 w-[260px] lg:absolute lg:top-10 lg:right-0 bg-white dark:bg-neutral-800 beige:bg-[#f7f0dc] shadow-[0_4px_24px_rgba(0,0,0,0.12)] rounded-2xl z-30 p-3 flex flex-col gap-1 special-t">
+            <div className="px-4 pt-1 pb-2 text-xs text-neutral-400">PDF theme</div>
+            {themeOptions.map(({ value, label, swatchClass }) => (
+              <button
+                key={value}
+                onClick={() => setPdfExportTheme(value)}
+                className={`px-4 py-3 text-left flex items-center justify-between w-full text-base rounded-xl transition-colors duration-200 ${pdfExportTheme === value ? "bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400" : "hover:bg-neutral-100 dark:hover:bg-neutral-700"}`}
+              >
+                <span>{label}</span>
+                <span className={`w-5 h-5 rounded-full ${swatchClass}`} />
+              </button>
+            ))}
+            <button
+              onClick={() => { downloadPdfFile(pdfExportTheme); setIsDownloadOpen(false); setIsPdfThemeStep(false); }}
+              className="mt-2 px-4 py-3 text-center rounded-xl bg-neutral-800 dark:bg-neutral-200 hover:bg-neutral-900 dark:hover:bg-neutral-300 text-white dark:text-neutral-900 text-base transition-colors duration-200"
+            >
+              Download PDF
             </button>
           </div>
         )}
