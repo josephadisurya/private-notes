@@ -215,6 +215,7 @@ export default function Writer() {
   const downloadPdfFile = () => {
     const hasTitle = title.trim().length > 0;
     const fileTitle = title.trim() || getDefaultTitle();
+    const pdfFont = font === "serif" ? "Times" : "Helvetica";
     const doc = new jsPDF({ unit: "mm", format: "a4" });
     const pageWidth = doc.internal.pageSize.getWidth();
     const pageHeight = doc.internal.pageSize.getHeight();
@@ -224,7 +225,7 @@ export default function Writer() {
     let y = margin + 5;
 
     if (hasTitle) {
-      doc.setFont("Helvetica", "bold");
+      doc.setFont(pdfFont, "bold");
       doc.setFontSize(18);
       doc.text(fileTitle, margin, y);
       y += 10;
@@ -296,7 +297,7 @@ export default function Writer() {
       if (seg.bold && seg.italic) fontStyle = "bolditalic";
       else if (seg.bold) fontStyle = "bold";
       else if (seg.italic) fontStyle = "italic";
-      doc.setFont("Helvetica", fontStyle);
+      doc.setFont(pdfFont, fontStyle);
       doc.setTextColor(0);
 
       for (const token of seg.text.split(/(\s+)/)) {
