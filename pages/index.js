@@ -8,7 +8,8 @@ import EditorFooter from "@/components/EditorFooter";
 import ClearModal from "@/components/ClearModal";
 import InfoModal from "@/components/InfoModal";
 import { getInitialTheme, applyTheme, saveTheme } from "@/lib/theme";
-import { startSaver, queueSave } from "@/lib/noteSaver";
+import { startSaver, queueSave, queueDelete, pendingNote } from "@/lib/noteSaver";
+import NotesSidebar from "@/components/NotesSidebar";
 import { SaveStatusPill, SaveStatusBanner } from "@/components/SaveStatus";
 
 export default function Writer() {
@@ -32,7 +33,10 @@ export default function Writer() {
   const downloadRef = useRef(null);
   const hasMounted = useRef(false);
   const toastTimeoutRef = useRef(null);
-  const skipSaveRef = useRef(false);
+  // What the editor held right after opening/creating a note, so that
+  // loading a note isn't mistaken for an edit and saved back.
+  const loadedRef = useRef({ title: "", body: "", footer: "" });
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const adjustTextareaHeight = (textarea) => {
     if (!textarea || !(textarea instanceof HTMLElement)) return;
@@ -95,20 +99,58 @@ export default function Writer() {
     setNoteId(crypto.randomUUID());
   }, []);
 
-  // Queue a save on every edit. Skips the first render and any change that
-  // came from opening a note (skipSaveRef), which isn't an edit.
+  // Queue a save on every edit. Skips the first render and any state that
+  // just came from opening a note (loadedRef), which isn't an edit.
   useEffect(() => {
     if (!hasMounted.current) {
       hasMounted.current = true;
       return;
     }
-    if (skipSaveRef.current) {
-      skipSaveRef.current = false;
-      return;
-    }
+    const l = loadedRef.current;
+    if (l && title === l.title && body === l.body && footer === l.footer) return;
+    // After the first real edit every change counts, even one that happens
+    // to restore the opened text.
+    loadedRef.current = null;
     if (noteId) queueSave(noteId, { title, body, footer });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [title, body, footer]);
+
+  const showNote = (id, note) => {
+    loadedRef.current = note;
+    setNoteId(id);
+    setTitle(note.title);
+    setBody(note.body);
+    setFooter(note.footer);
+  };
+
+  const newNote = () => {
+    showNote(crypto.randomUUID(), { title: "", body: "", footer: "" });
+    setSidebarOpen(false);
+  };
+
+  const [openError, setOpenError] = useState("");
+  const openNote = async (id) => {
+    setSidebarOpen(false);
+    if (id === noteId) return;
+    // Unsent edits on this device are newer than the server copy.
+    const local = pendingNote(id);
+    if (local) return showNote(id, { title: local.title, body: local.body, footer: local.footer });
+    try {
+      const res = await fetch(`/api/notes/${id}`);
+      if (!res.ok) throw new Error();
+      const { note } = await res.json();
+      showNote(id, { title: note.title || "", body: note.body || "", footer: note.footer || "" });
+      setOpenError("");
+    } catch {
+      setOpenError("Couldn't open that note. Check your connection and try again.");
+      setTimeout(() => setOpenError(""), 4000);
+    }
+  };
+
+  const handleDeleted = (id) => {
+    queueDelete(id);
+    if (id === noteId) showNote(crypto.randomUUID(), { title: "", body: "", footer: "" });
+  };
 
   // The toolbar now renders (via a portal) directly into a slot inside
   // EditorFooter's own row, instead of floating separately above it — so
@@ -415,7 +457,22 @@ export default function Writer() {
       </Head>
 
       {/* Top-left: note controls and save status */}
-      <div className="fixed top-0 left-0 z-20 m-5 flex items-center gap-x-3 h-11 lg:h-[30px]">
+      <div className="fixed top-0 left-0 z-20 m-5 flex items-center h-11 lg:h-[30px]">
+        <button
+          onClick={() => setSidebarOpen(true)}
+          aria-label="Open notes"
+          aria-expanded={sidebarOpen}
+          className="text-neutral-400 beige:text-[#594e38] hover:text-black dark:hover:text-white beige:hover:text-[#463a25] w-11 h-11 lg:w-[30px] lg:h-[30px] -ml-2.5 lg:ml-0 flex items-center justify-center rounded-lg transition-colors duration-300 outline-none focus-visible:ring-2 focus-visible:ring-blue-600/40"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5" aria-hidden="true">
+            <rect x="3" y="4" width="18" height="16" rx="2.5" />
+            <line x1="9" y1="4" x2="9" y2="20" />
+          </svg>
+        </button>
+      </div>
+      {/* Save status: under the notes button on phones (the icon row fills
+          the top), next to it on desktop. */}
+      <div className="fixed left-5 top-[68px] lg:top-5 lg:left-[62px] lg:h-[30px] z-20 flex items-center">
         <SaveStatusPill
           mutedClass="text-neutral-500 dark:text-neutral-400 beige:text-[#594e38]"
           subtleBgClass="bg-neutral-100 dark:bg-neutral-800 beige:bg-[#efe3c8]"
@@ -467,6 +524,22 @@ export default function Writer() {
           Download successful!
         </div>
       </div>
+
+      {openError && (
+        <div role="alert" className="fixed bottom-24 left-1/2 -translate-x-1/2 z-40 bg-red-600 text-white rounded-2xl px-5 py-3 text-xs max-w-[calc(100%-40px)]">
+          {openError}
+        </div>
+      )}
+
+      <NotesSidebar
+        open={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+        currentId={noteId}
+        currentNote={{ title, body }}
+        onOpenNote={openNote}
+        onNewNote={newNote}
+        onDeleted={handleDeleted}
+      />
 
       <ClearModal
         isModalOpen={isModalOpen}

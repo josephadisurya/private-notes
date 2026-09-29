@@ -59,7 +59,7 @@ export default function EditorHeader({
   }[font];
 
   return (
-    <div className={`fixed top-0 self-end z-20 m-5 flex items-center gap-x-3 transition-opacity duration-500 ${iconsVisible || isDownloadOpen || isFontOpen || isThemeOpen ? "opacity-100" : "opacity-0 pointer-events-none"}`}>
+    <div className={`fixed top-0 self-end z-20 m-5 flex items-center gap-x-1 min-[360px]:gap-x-3 transition-opacity duration-500 ${iconsVisible || isDownloadOpen || isFontOpen || isThemeOpen ? "opacity-100" : "opacity-0 pointer-events-none"}`}>
 
       {/* Font Picker Button */}
       <div ref={fontRef} className="relative flex justify-center group">
