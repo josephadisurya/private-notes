@@ -8,6 +8,8 @@ import EditorFooter from "@/components/EditorFooter";
 import ClearModal from "@/components/ClearModal";
 import InfoModal from "@/components/InfoModal";
 import { getInitialTheme, applyTheme, saveTheme } from "@/lib/theme";
+import { startSaver, queueSave } from "@/lib/noteSaver";
+import { SaveStatusPill, SaveStatusBanner } from "@/components/SaveStatus";
 
 export default function Writer() {
   const [title, setTitle] = useState("");
@@ -23,12 +25,14 @@ export default function Writer() {
   const [showToast, setShowToast] = useState(false);
   const [font, setFont] = useState("sans");
   const [theme, setTheme] = useState("light");
+  const [noteId, setNoteId] = useState(null);
 
   const titleRef = useRef(null);
   const bodyRef = useRef(null);
   const downloadRef = useRef(null);
   const hasMounted = useRef(false);
   const toastTimeoutRef = useRef(null);
+  const skipSaveRef = useRef(false);
 
   const adjustTextareaHeight = (textarea) => {
     if (!textarea || !(textarea instanceof HTMLElement)) return;
@@ -84,26 +88,26 @@ export default function Writer() {
     }
   }, [title, body, footer]);
 
-  // Load from localStorage on mount
+  // Each visit starts on a fresh, unsaved note. It's only written to the
+  // server once something is typed (see lib/noteSaver).
   useEffect(() => {
-    const savedTitle = localStorage.getItem("title");
-    const savedBody = localStorage.getItem("body");
-    const savedFooter = localStorage.getItem("footer");
-    if (savedTitle) setTitle(savedTitle);
-    if (savedBody) setBody(savedBody);
-    if (savedFooter) setFooter(savedFooter);
+    startSaver();
+    setNoteId(crypto.randomUUID());
   }, []);
 
-  // Save to localStorage on change, skip the initial mount to avoid
-  // overwriting stored data before the load effect's state updates apply
+  // Queue a save on every edit. Skips the first render and any change that
+  // came from opening a note (skipSaveRef), which isn't an edit.
   useEffect(() => {
     if (!hasMounted.current) {
       hasMounted.current = true;
       return;
     }
-    localStorage.setItem("title", title);
-    localStorage.setItem("body", body);
-    localStorage.setItem("footer", footer);
+    if (skipSaveRef.current) {
+      skipSaveRef.current = false;
+      return;
+    }
+    if (noteId) queueSave(noteId, { title, body, footer });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [title, body, footer]);
 
   // The toolbar now renders (via a portal) directly into a slot inside
@@ -376,16 +380,13 @@ export default function Writer() {
     setTitle("");
     setBody("");
     setFooter("");
-    localStorage.removeItem("title");
-    localStorage.removeItem("body");
-    localStorage.removeItem("footer");
     setIsModalOpen(false);
   };
 
   return (
     <>
       <Head>
-        <title>Writer</title>
+        <title>Private notes</title>
         <meta itemProp="name" content="Writer" />
         <meta name="twitter:title" content="Writer" />
         <meta property="og:title" content="Writer" />
@@ -413,8 +414,18 @@ export default function Writer() {
         <meta name="theme-color" content="#171717" />
       </Head>
 
+      {/* Top-left: note controls and save status */}
+      <div className="fixed top-0 left-0 z-20 m-5 flex items-center gap-x-3 h-11 lg:h-[30px]">
+        <SaveStatusPill
+          mutedClass="text-neutral-500 dark:text-neutral-400 beige:text-[#594e38]"
+          subtleBgClass="bg-neutral-100 dark:bg-neutral-800 beige:bg-[#efe3c8]"
+        />
+      </div>
+
       <div className="flex flex-col items-center pt-28 min-h-screen w-full special-t">
+        <SaveStatusBanner className="-mt-10 mb-6 mx-5 max-w-[560px]" />
         <EditorArea
+          key={noteId || "new"}
           title={title}
           setTitle={setTitle}
           body={body}
