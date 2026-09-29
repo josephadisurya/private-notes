@@ -42,7 +42,7 @@ export default function InfoModal({ isInfoOpen, closeInfoModal }) {
 
           <div className="border-t-[1px] border-black mb-5 mt-14 dark:border-white beige:border-[#463a25]">Colophon</div>
           <div>Font</div>
-          <div className="mb-5">Satoshi by Deni Anggara</div>
+          <div className="mb-5">San Francisco by Apple (system font)</div>
 
           <div>Design</div>
           <div className="mb-5">Joseph Adisurya</div>

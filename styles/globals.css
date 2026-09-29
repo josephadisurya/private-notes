@@ -2,16 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
-@font-face {
-    font-family: "Satoshi";
-    font-feature-settings: "ss03";
-    font-style: normal;
-    src: url("../public/font/Satoshi-Variable.ttf");
-}
-
+  /* UI and the "Sans" editor font: Apple's native sans (San Francisco),
+     falling back to each platform's system font elsewhere. */
   .special-t, .special-t * {
-    font-family: "Satoshi", sans-serif;
-    font-feature-settings: "ss03";
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", system-ui, sans-serif;
   }
 
   .serif-t, .serif-t * {

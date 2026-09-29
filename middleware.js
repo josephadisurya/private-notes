@@ -30,7 +30,7 @@ export default async function middleware(request) {
     if (!isPrefetch) await touchSession(session.id);
     if (pathname === "/login") return NextResponse.redirect(new URL("/", request.url));
     const response = NextResponse.next();
-    if (!isPrefetch) setAuthCookie(response, request, session.id); // rolling: refresh the 30-day idle window
+    if (!isPrefetch) setAuthCookie(response, request, session.id); // rolling: refresh the 3-day idle window
     return response;
   }
 

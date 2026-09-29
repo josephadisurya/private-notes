@@ -53,7 +53,7 @@ export default function EditorHeader({
     { value: "beige", label: "Beige", swatchClass: "bg-[#f8efdb] border border-neutral-300", swatchColor: "#f8efdb" },
   ];
   const fontPreviewStyle = {
-    sans: { fontFamily: '"Satoshi", sans-serif' },
+    sans: { fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", system-ui, sans-serif' },
     serif: { fontFamily: '"Spectral", Georgia, serif' },
     dyslexic: { fontFamily: '"OpenDyslexic", sans-serif' },
   }[font];
@@ -79,7 +79,7 @@ export default function EditorHeader({
               className={`px-4 py-3 text-left flex items-center justify-between w-full text-base rounded-xl transition-colors duration-200 ${font === "sans" ? "bg-blue-100 dark:bg-blue-900/40 beige:bg-[#e8d3a0] text-blue-600 dark:text-blue-400 beige:text-[#463a25]" : "hover:bg-neutral-100 dark:hover:bg-neutral-700 beige:hover:bg-[#f0e2be]"}`}
             >
               <span>Sans Serif</span>
-              <span className="text-neutral-400 beige:text-[#594e38]" style={{ fontFamily: '"Satoshi", sans-serif' }}>Aa</span>
+              <span className="text-neutral-400 beige:text-[#594e38]" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", system-ui, sans-serif' }}>Aa</span>
             </button>
             <button
               onClick={() => { setFont("serif"); setIsFontOpen(false); }}

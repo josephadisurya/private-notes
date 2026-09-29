@@ -46,7 +46,7 @@ export default function Writer() {
     if (titleRef.current) adjustTextareaHeight(titleRef.current);
   }, [title]);
 
-  // Re-adjust after fonts load so scrollHeight uses correct Satoshi metrics
+  // Re-adjust after fonts load so scrollHeight uses correct font metrics
   useEffect(() => {
     document.fonts.ready.then(() => {
       if (titleRef.current) adjustTextareaHeight(titleRef.current);
