@@ -61,3 +61,13 @@
     color: #463a25;
   }
 
+
+/* Icon font glyphs are one em wide. Clip the ligature name so that, if the
+   icon font hasn't loaded (slow or offline first visit), words like
+   "download" can't widen the icon row over the notes button. */
+.material-symbols-rounded {
+  display: inline-block;
+  width: 1em;
+  overflow: hidden;
+  white-space: nowrap;
+}
