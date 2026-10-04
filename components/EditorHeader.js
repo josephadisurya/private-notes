@@ -64,7 +64,7 @@ export default function EditorHeader({
       {/* Font Picker Button */}
       <div ref={fontRef} className="relative flex justify-center group">
         <button
-          onClick={() => setIsFontOpen((prev) => !prev)}
+          onClick={() => setIsFontOpen((prev) => !prev)} aria-label="Font" aria-expanded={isFontOpen}
           className="text-neutral-400 beige:text-[#594e38] hover:text-black dark:hover:text-white beige:hover:text-[#463a25] w-11 h-11 lg:w-[30px] lg:h-[30px] flex items-center justify-center transition-all duration-500 text-lg font-semibold"
           style={fontPreviewStyle}
         >
@@ -102,7 +102,7 @@ export default function EditorHeader({
       {/* Theme Picker Button */}
       <div ref={themeRef} className="relative flex justify-center group">
         <button
-          onClick={() => setIsThemeOpen((prev) => !prev)}
+          onClick={() => setIsThemeOpen((prev) => !prev)} aria-label="Theme" aria-expanded={isThemeOpen}
           className="text-neutral-400 beige:text-[#594e38] hover:text-black dark:hover:text-white beige:hover:text-[#463a25] w-11 h-11 lg:w-[30px] lg:h-[30px] flex items-center justify-center transition-all duration-500"
         >
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2">
@@ -131,10 +131,10 @@ export default function EditorHeader({
       {/* Download Button */}
       <div ref={downloadRef} className="relative flex justify-center group">
         <button
-          onClick={() => setIsDownloadOpen((prev) => !prev)}
+          onClick={() => setIsDownloadOpen((prev) => !prev)} aria-label="Download" aria-expanded={isDownloadOpen}
           className="text-neutral-400 beige:text-[#594e38] hover:text-black dark:hover:text-white beige:hover:text-[#463a25] w-11 h-11 lg:w-[30px] lg:h-[30px] flex items-center justify-center transform-all duration-500"
         >
-          <span className="material-symbols-rounded" style={{ fontSize: 18 }}>download</span>
+          <span aria-hidden="true" className="material-symbols-rounded" style={{ fontSize: 18 }}>download</span>
         </button>
         <div className="text-xs absolute z-20 mt-10 dark:text-white text-black beige:text-[#463a25] invisible lg:group-hover:visible">Download</div>
 
@@ -198,10 +198,10 @@ export default function EditorHeader({
       {/* Clear Button */}
       <div className="flex justify-center group">
         <button
-          onClick={openClearModal}
+          onClick={openClearModal} aria-label="Clear note"
           className="text-neutral-400 beige:text-[#594e38] hover:text-black dark:hover:text-white beige:hover:text-[#463a25] w-11 h-11 lg:w-[30px] lg:h-[30px] flex items-center justify-center transform-all duration-500"
         >
-          <span className="material-symbols-rounded" style={{ fontSize: 18 }}>backspace</span>
+          <span aria-hidden="true" className="material-symbols-rounded" style={{ fontSize: 18 }}>backspace</span>
         </button>
         <div className="text-xs absolute z-20 mt-10 dark:text-white text-black beige:text-[#463a25] invisible lg:group-hover:visible">Clear</div>
       </div>
@@ -209,7 +209,7 @@ export default function EditorHeader({
       {/* Info Button */}
       <div className="flex justify-center group">
         <button
-          onClick={openInfoModal}
+          onClick={openInfoModal} aria-label="About"
           className="text-neutral-400 beige:text-[#594e38] hover:text-black dark:hover:text-white beige:hover:text-[#463a25] w-11 h-11 lg:w-[30px] lg:h-[30px] flex items-center justify-center transform-all duration-500"
         >
           <span className="material-symbols-outlined" style={{ fontSize: 18 }}>info</span>

@@ -8,7 +8,7 @@ import EditorFooter from "@/components/EditorFooter";
 import ClearModal from "@/components/ClearModal";
 import InfoModal from "@/components/InfoModal";
 import { getInitialTheme, applyTheme, saveTheme } from "@/lib/theme";
-import { startSaver, queueSave, queueDelete, pendingNote } from "@/lib/noteSaver";
+import { startSaver, queueSave, queueDelete, pendingNote, setVersion, onConflict } from "@/lib/noteSaver";
 import NotesSidebar from "@/components/NotesSidebar";
 import { SaveStatusPill, SaveStatusBanner } from "@/components/SaveStatus";
 
@@ -27,6 +27,9 @@ export default function Writer() {
   const [font, setFont] = useState("sans");
   const [theme, setTheme] = useState("light");
   const [noteId, setNoteId] = useState(null);
+  // Remounts the editor when a different note is shown; stays the same when
+  // a conflict only moves the open text to a new id, so typing isn't cut off.
+  const [editorKey, setEditorKey] = useState("new");
 
   const titleRef = useRef(null);
   const bodyRef = useRef(null);
@@ -118,6 +121,7 @@ export default function Writer() {
   const showNote = (id, note) => {
     loadedRef.current = note;
     setNoteId(id);
+    setEditorKey(id);
     setTitle(note.title);
     setBody(note.body);
     setFooter(note.footer);
@@ -139,6 +143,7 @@ export default function Writer() {
       const res = await fetch(`/api/notes/${id}`);
       if (!res.ok) throw new Error();
       const { note } = await res.json();
+      setVersion(id, note.version);
       showNote(id, { title: note.title || "", body: note.body || "", footer: note.footer || "" });
       setOpenError("");
     } catch {
@@ -146,6 +151,27 @@ export default function Writer() {
       setTimeout(() => setOpenError(""), 4000);
     }
   };
+
+  // Another device changed the open note: our edits were saved as a copy, so
+  // keep editing the copy (same text on screen, new id and title).
+  const [notice, setNotice] = useState("");
+  const noteIdRef = useRef(null);
+  useEffect(() => {
+    noteIdRef.current = noteId;
+  }, [noteId]);
+  useEffect(
+    () =>
+      onConflict((id, copyId, copy) => {
+        if (noteIdRef.current === id) {
+          loadedRef.current = { title: copy.title, body: copy.body, footer: copy.footer };
+          setNoteId(copyId);
+          setTitle(copy.title);
+        }
+        setNotice("This note was changed on another device. Your version was saved as a separate copy, so nothing is lost.");
+        setTimeout(() => setNotice(""), 7000);
+      }),
+    []
+  );
 
   const handleDeleted = (id) => {
     queueDelete(id);
@@ -482,7 +508,7 @@ export default function Writer() {
       <div className="flex flex-col items-center pt-28 min-h-screen w-full special-t">
         <SaveStatusBanner className="-mt-10 mb-6 mx-5 max-w-[560px]" />
         <EditorArea
-          key={noteId || "new"}
+          key={editorKey}
           title={title}
           setTitle={setTitle}
           body={body}
@@ -492,6 +518,10 @@ export default function Writer() {
           adjustTextareaHeight={adjustTextareaHeight}
           toolbarSlot={toolbarSlot}
           font={font}
+          onLimit={() => {
+            setNotice("This note has reached the 100,000-character limit. Start a new note to keep writing.");
+            setTimeout(() => setNotice(""), 5000);
+          }}
         />
 
         <EditorFooter
@@ -524,6 +554,12 @@ export default function Writer() {
           Download successful!
         </div>
       </div>
+
+      {notice && (
+        <div role="status" className="fixed bottom-24 left-1/2 -translate-x-1/2 z-40 bg-neutral-900 text-white rounded-2xl px-5 py-3 text-xs max-w-[calc(100%-40px)] w-max">
+          {notice}
+        </div>
+      )}
 
       {openError && (
         <div role="alert" className="fixed bottom-24 left-1/2 -translate-x-1/2 z-40 bg-red-600 text-white rounded-2xl px-5 py-3 text-xs max-w-[calc(100%-40px)]">

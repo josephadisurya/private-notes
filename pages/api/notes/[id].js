@@ -1,10 +1,10 @@
 export const config = { api: { bodyParser: { sizeLimit: "2mb" } } };
 
 import { getNote, saveNote, deleteNote } from "../../../lib/notes";
+import { TITLE_MAX, TEXT_MAX, HTML_MAX, textLength } from "../../../lib/noteLimits";
 
 // Client-generated UUIDs only, so nothing odd reaches the PostgREST filter.
 const ID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-const MAX_LEN = 2_000_000;
 
 export default async function handler(req, res) {
   const { id } = req.query;
@@ -18,12 +18,16 @@ export default async function handler(req, res) {
       return res.status(200).json({ note });
     }
     if (req.method === "PUT") {
-      const { title = "", body = "", footer = "" } = req.body || {};
-      if ([title, body, footer].some((v) => typeof v !== "string") || title.length + body.length + footer.length > MAX_LEN) {
+      const { title = "", body = "", footer = "", baseVersion = null } = req.body || {};
+      if ([title, body, footer].some((v) => typeof v !== "string") || footer.length > 500 || (baseVersion != null && !Number.isInteger(baseVersion))) {
         return res.status(400).json({ error: "Bad note" });
       }
-      const note = await saveNote(id, { title, body, footer });
-      return res.status(200).json({ updatedAt: note?.updated_at });
+      if (title.length > TITLE_MAX || body.length > HTML_MAX || textLength(body) > TEXT_MAX) {
+        return res.status(413).json({ error: "too_big" });
+      }
+      const result = await saveNote(id, { title, body, footer }, baseVersion);
+      if (result.conflict) return res.status(409).json({ note: result.conflict });
+      return res.status(200).json({ version: result.note.version, updatedAt: result.note.updated_at });
     }
     if (req.method === "DELETE") {
       await deleteNote(id);

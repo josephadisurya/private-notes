@@ -18,6 +18,7 @@ create table if not exists public.private_notes (
   title      text not null default '',
   body       text not null default '',
   footer     text not null default '',
+  version    integer not null default 1,   -- +1 on every save; detects edits from two devices
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );

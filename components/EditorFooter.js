@@ -4,8 +4,12 @@ function countWords(title, body) {
   return words.length === 1 && words[0] === "" ? 0 : words.length;
 }
 
+import { TEXT_MAX, textLength } from "@/lib/noteLimits";
+
 export default function EditorFooter({ iconsVisible, footer, title, body, toolbarSlotRef }) {
   const words = countWords(title, body);
+  const chars = textLength(body);
+  const nearLimit = chars >= TEXT_MAX * 0.9;
 
   return (
     <div className={`fixed bottom-0 w-full pointer-events-none transition-opacity duration-500 ${iconsVisible ? "opacity-100" : "opacity-0"}`}>
@@ -21,10 +25,13 @@ export default function EditorFooter({ iconsVisible, footer, title, body, toolba
           className="order-1 lg:order-2 w-full lg:w-auto flex justify-center lg:justify-start pointer-events-auto"
         />
         <div className="order-2 lg:order-1 text-xs dark:text-neutral-400 text-neutral-500 beige:text-[#594e38] max-w-[240px] pointer-events-auto">
-          {footer || "Only you can see what you write. Content is stored locally."}
+          {footer || "Only you can see what you write."}
         </div>
         <div className="order-3 text-xs dark:text-neutral-400 text-neutral-500 beige:text-[#594e38] shrink-0 pl-4 pointer-events-auto">
           {words} {words === 1 ? "word" : "words"}
+          {nearLimit && (
+            <span className={chars >= TEXT_MAX ? "text-red-600" : ""}> · {chars.toLocaleString("en")} / {TEXT_MAX.toLocaleString("en")} characters</span>
+          )}
         </div>
       </div>
     </div>

@@ -7,6 +7,8 @@ Password-protected notes app, forked from app-writer's `main` (Sep 30, 2026). Ne
 - **Env (Vercel):** `APP_PASSWORD`, `SUPABASE_URL`, `SUPABASE_SERVICE_KEY`. These belong to a **separate Supabase project just for private-notes** (decided 2026-10-04), not the shared one kanban/spending-tracker/mosaics use, so a leaked key from another app can't reach the notes. Don't copy these keys anywhere else (not the VPS, not other apps).
 - **No encryption** (Joseph's decision, 2026-10-04): notes are plain text in that project, protected by the separate project, RLS, the app password and account 2FA.
 - **Saving:** `lib/noteSaver.js` writes edits to localStorage (`private-notes-pending`) first, then PUTs `/api/notes/[id]` after 700ms; retries with backoff, on reconnect and on next load. An emptied note is deleted. Save pill/banner: `components/SaveStatus.js`.
+- **Conflicts:** each note has a `version`; saves send `baseVersion` and the API only updates if it still matches. On 409 the client saves its text as a new note "<title> (from this device)" and keeps editing that (same editor, no remount). Identical text on the server (another tab sent the same queued edit) is treated as saved.
+- **Limits** (`lib/noteLimits.js`): title 200 chars, body 100,000 chars of text (typing/paste blocked at the limit, counter from 90%), stored HTML 1,000,000; API answers 413 above that.
 - **UX rules:** every visit opens a fresh unsaved note; past notes are in `components/NotesSidebar.js` (top-left button).
 - **Service worker** (`public/sw.js`) caches only static files; pages and `/api/` always go to the network.
 - **Fonts:** UI and the "Sans" editor option use the Apple system stack (`-apple-system, BlinkMacSystemFont, "SF Pro Text", …`); Serif = Spectral, Dyslexic = OpenDyslexic.

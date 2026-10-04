@@ -47,6 +47,9 @@ export function SaveStatusPill({ mutedClass, subtleBgClass }) {
   } else if (status === "error") {
     label = "Not saved · retrying";
     cls = "bg-red-500 text-white";
+  } else if (status === "too_big") {
+    label = "Too long · not saved";
+    cls = "bg-red-500 text-white";
   } else if (status === "unauthorized") {
     label = "Signed out · not saved";
     cls = "bg-red-500 text-white";
@@ -71,7 +74,10 @@ export function SaveStatusBanner({ className = "" }) {
   const online = useOnline();
 
   let text, cls;
-  if (status === "unauthorized") {
+  if (status === "too_big") {
+    cls = "bg-red-500 text-white";
+    text = "This note is too long to save. Shorten it, or split it into two notes.";
+  } else if (status === "unauthorized") {
     cls = "bg-red-500 text-white";
     text = (
       <>

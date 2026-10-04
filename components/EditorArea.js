@@ -1,10 +1,29 @@
 import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
+import { TITLE_MAX, TEXT_MAX } from "@/lib/noteLimits";
 
-export default function EditorArea({ title, setTitle, body, setBody, titleRef, bodyRef, adjustTextareaHeight, toolbarSlot, font }) {
+export default function EditorArea({ title, setTitle, body, setBody, titleRef, bodyRef, adjustTextareaHeight, toolbarSlot, font, onLimit }) {
   const [activeFormats, setActiveFormats] = useState({ bold: false, italic: false, underline: false, strikeThrough: false });
   const [isBodyEmpty, setIsBodyEmpty] = useState(true);
   const loadedRef = useRef(false);
+
+  // Size limit (lib/noteLimits): block typing past TEXT_MAX characters;
+  // deleting and formatting still work. Paste is trimmed in onPaste.
+  useEffect(() => {
+    const el = bodyRef.current;
+    if (!el) return;
+    const onBeforeInput = (e) => {
+      if (!e.inputType.startsWith("insert") || e.inputType === "insertFromPaste") return;
+      const selected = window.getSelection()?.toString().length || 0;
+      if (el.innerText.length - selected >= TEXT_MAX) {
+        e.preventDefault();
+        onLimit?.();
+      }
+    };
+    el.addEventListener("beforeinput", onBeforeInput);
+    return () => el.removeEventListener("beforeinput", onBeforeInput);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Custom undo/redo — the browser's native contentEditable undo groups
   // keystrokes unpredictably (a single Ctrl+Z can erase an entire sentence
@@ -162,6 +181,7 @@ export default function EditorArea({ title, setTitle, body, setBody, titleRef, b
           placeholder="Title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
+          maxLength={TITLE_MAX}
           onInput={(e) => adjustTextareaHeight(e.target)}
           style={{ overflow: "hidden", resize: "none" }}
           rows={1}
@@ -182,7 +202,14 @@ export default function EditorArea({ title, setTitle, body, setBody, titleRef, b
             }}
             onPaste={(e) => {
               e.preventDefault();
-              document.execCommand("insertText", false, e.clipboardData.getData("text/plain"));
+              let text = e.clipboardData.getData("text/plain");
+              const selected = window.getSelection()?.toString().length || 0;
+              const room = TEXT_MAX - (bodyRef.current.innerText.length - selected);
+              if (text.length > room) {
+                text = text.slice(0, Math.max(0, room));
+                onLimit?.();
+              }
+              if (text) document.execCommand("insertText", false, text);
               commitHistoryNow(bodyRef.current.innerHTML);
             }}
             onKeyDown={handleBodyKeyDown}
