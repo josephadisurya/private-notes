@@ -6,9 +6,8 @@ import EditorArea from "@/components/EditorArea";
 import EditorHeader from "@/components/EditorHeader";
 import EditorFooter from "@/components/EditorFooter";
 import ClearModal from "@/components/ClearModal";
-import InfoModal from "@/components/InfoModal";
 import { getInitialTheme, applyTheme, saveTheme } from "@/lib/theme";
-import { startSaver, queueSave, queueDelete, pendingNote, setVersion, onConflict } from "@/lib/noteSaver";
+import { startSaver, queueSave, queueDelete, pendingNote, setVersion, onConflict, flush } from "@/lib/noteSaver";
 import NotesSidebar from "@/components/NotesSidebar";
 import { SaveStatusPill, SaveStatusBanner } from "@/components/SaveStatus";
 
@@ -18,7 +17,6 @@ export default function Writer() {
   const [footer, setFooter] = useState("");
   const [isDownloadOpen, setIsDownloadOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isInfoOpen, setIsInfoOpen] = useState(false);
   // Auto-hide-on-inactivity was removed per feedback; kept as a constant
   // (rather than deleting the prop everywhere) so header/footer opacity
   // logic downstream doesn't need touching.
@@ -172,6 +170,17 @@ export default function Writer() {
       }),
     []
   );
+
+  // Lock: send any queued edits, sign out, back to the password page.
+  // Edits that couldn't be sent stay on this device and go out after the
+  // next login.
+  const lock = async () => {
+    await flush().catch(() => {});
+    try {
+      await fetch("/api/logout", { method: "POST" });
+    } catch {}
+    window.location.href = "/login";
+  };
 
   const handleDeleted = (id) => {
     queueDelete(id);
@@ -541,7 +550,7 @@ export default function Writer() {
           downloadMdFile={downloadMdFile}
           downloadTxtFile={downloadTxtFile}
           openClearModal={() => setIsModalOpen(true)}
-          openInfoModal={() => setIsInfoOpen(true)}
+          lock={lock}
           font={font}
           setFont={setFont}
           theme={theme}
@@ -583,10 +592,6 @@ export default function Writer() {
         cancelClear={() => setIsModalOpen(false)}
       />
 
-      <InfoModal
-        isInfoOpen={isInfoOpen}
-        closeInfoModal={() => setIsInfoOpen(false)}
-      />
     </>
   );
 }

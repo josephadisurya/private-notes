@@ -9,7 +9,7 @@ export default function EditorHeader({
   downloadMdFile,
   downloadTxtFile,
   openClearModal,
-  openInfoModal,
+  lock,
   font,
   setFont,
   theme,
@@ -206,15 +206,18 @@ export default function EditorHeader({
         <div className="text-xs absolute z-20 mt-10 dark:text-white text-black beige:text-[#463a25] invisible lg:group-hover:visible">Clear</div>
       </div>
 
-      {/* Info Button */}
+      {/* Lock: signs out and goes back to the password page */}
       <div className="flex justify-center group">
         <button
-          onClick={openInfoModal} aria-label="About"
+          onClick={lock} aria-label="Lock"
           className="text-neutral-400 beige:text-[#594e38] hover:text-black dark:hover:text-white beige:hover:text-[#463a25] w-11 h-11 lg:w-[30px] lg:h-[30px] flex items-center justify-center transform-all duration-500"
         >
-          <span className="material-symbols-outlined" style={{ fontSize: 18 }}>info</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-[18px] h-[18px]" aria-hidden="true">
+            <rect x="5" y="11" width="14" height="10" rx="2" />
+            <path d="M8 11V7a4 4 0 0 1 8 0v4" />
+          </svg>
         </button>
-        <div className="text-xs absolute z-20 mt-10 dark:text-white text-black beige:text-[#463a25] invisible lg:group-hover:visible">Info</div>
+        <div className="text-xs absolute z-20 mt-10 dark:text-white text-black beige:text-[#463a25] invisible lg:group-hover:visible">Lock</div>
       </div>
 
     </div>
