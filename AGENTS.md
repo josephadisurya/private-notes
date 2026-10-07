@@ -15,6 +15,6 @@ Password-protected notes app, forked from app-writer's `main` (Sep 30, 2026). Ne
 - **Not in the weekly Supabase backup** (`~/backup-supabase.py` lists tables explicitly).
 - **Local testing without Supabase:** point `SUPABASE_URL` at a PostgREST stand-in (a small mock was used during development).
 
-## Database (Neon, since 2026-10-07 — branch `migrate-to-neon` until merged)
+## Database (Neon, since 2026-10-07)
 - Neon Postgres over HTTP (`@neondatabase/serverless`), `DATABASE_URL` (Neon project "private-notes"). One driver everywhere because `middleware.js` runs on the Edge runtime. Tables created on first use (`lib/db.js`); queries in `lib/notes.js` and `lib/sessions.js`. Optimistic locking via `version` as before.
 - Moving data from the old Supabase project: `SUPABASE_URL=… SUPABASE_SERVICE_KEY=… DATABASE_URL=… node scripts/copy-from-supabase.mjs [--dry-run]`.
